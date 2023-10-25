@@ -30,7 +30,7 @@ import com.br.streamcontrol.ui.widgets.HeadingTextComponent
 import com.br.streamcontrol.ui.widgets.MyTextFieldComponent
 import com.br.streamcontrol.ui.widgets.NormalTextComponent
 import com.br.streamcontrol.ui.widgets.PasswordTextFieldComponent
-import com.br.streamcontrol.viewmodel.AuthViewModel
+import com.br.streamcontrol.data.login.AuthViewModel
 
 @Composable
 fun LoginScreen(loginViewModel: AuthViewModel = viewModel()) {

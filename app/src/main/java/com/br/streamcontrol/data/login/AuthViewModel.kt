@@ -1,10 +1,8 @@
-package com.br.streamcontrol.viewmodel
+package com.br.streamcontrol.data.login
 
 import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
-import com.br.streamcontrol.data.login.LoginUIEvent
-import com.br.streamcontrol.data.login.LoginUIState
 import com.br.streamcontrol.data.rules.Validator
 import com.br.streamcontrol.ui.routes.Router
 import com.br.streamcontrol.ui.routes.Screen

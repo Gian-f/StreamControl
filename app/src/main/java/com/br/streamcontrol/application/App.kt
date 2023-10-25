@@ -26,7 +26,7 @@ fun App(homeViewModel: HomeViewModel = viewModel()) {
             Router.navigateTo(Screen.HomeScreen)
         }
 
-        Crossfade(targetState = Router.currentScreen) { currentState ->
+        Crossfade(targetState = Router.currentScreen, label = "") { currentState ->
             when (currentState.value) {
                 is Screen.LoginScreen -> {
                     LoginScreen()

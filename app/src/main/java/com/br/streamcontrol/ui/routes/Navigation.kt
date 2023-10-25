@@ -10,12 +10,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.platform.LocalLifecycleOwner
-import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
-import com.br.streamcontrol.ui.screens.LoginScreen
-import com.br.streamcontrol.viewmodel.AuthViewModel
 
 private val LocalBackPressedDispatcher =
     staticCompositionLocalOf<OnBackPressedDispatcherOwner?> { null }
