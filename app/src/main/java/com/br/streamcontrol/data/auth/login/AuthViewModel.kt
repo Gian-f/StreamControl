@@ -1,4 +1,4 @@
-package com.br.streamcontrol.data.login
+package com.br.streamcontrol.data.auth.login
 
 import android.util.Log
 import androidx.compose.runtime.mutableStateOf

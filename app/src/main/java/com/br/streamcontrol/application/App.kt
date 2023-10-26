@@ -10,7 +10,9 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.br.streamcontrol.data.home.HomeViewModel
 import com.br.streamcontrol.ui.routes.Router
 import com.br.streamcontrol.ui.routes.Screen
+import com.br.streamcontrol.ui.screens.HomeScreen
 import com.br.streamcontrol.ui.screens.LoginScreen
+import com.br.streamcontrol.ui.screens.SignUpScreen
 
 @Composable
 fun App(homeViewModel: HomeViewModel = viewModel()) {
@@ -31,6 +33,15 @@ fun App(homeViewModel: HomeViewModel = viewModel()) {
                 is Screen.LoginScreen -> {
                     LoginScreen()
                 }
+
+                is Screen.SignUpScreen -> {
+                    SignUpScreen()
+                }
+
+                is Screen.HomeScreen -> {
+                    HomeScreen()
+                }
+
                 else -> {}
             }
         }

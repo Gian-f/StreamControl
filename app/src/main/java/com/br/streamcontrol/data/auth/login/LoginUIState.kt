@@ -1,4 +1,4 @@
-package com.br.streamcontrol.data.login
+package com.br.streamcontrol.data.auth.login
 
 data class LoginUIState(
     var email  :String = "",

@@ -104,6 +104,7 @@ fun HeadingTextComponent(value: String) {
 fun MyTextFieldComponent(
     labelValue: String, painterResource: Painter,
     onTextChanged: (String) -> Unit,
+    fieldName: String,
     errorStatus: Boolean = false,
 ) {
 
@@ -138,7 +139,7 @@ fun MyTextFieldComponent(
             Icon(painter = painterResource, contentDescription = "")
         },
         supportingText = {
-            Text(text = if(isFocused.value) if (!errorStatus) "Digite um e-mail válido" else "" else "")
+            Text(text = if(isFocused.value) if (!errorStatus) "Digite um $fieldName válido" else "" else "")
         },
         isError = if (isFocused.value) !errorStatus else false,
     )
@@ -246,10 +247,10 @@ fun CheckboxComponent(
 
 @Composable
 fun ClickableTextComponent(value: String, onTextSelected: (String) -> Unit) {
-    val initialText = "By continuing you accept our "
-    val privacyPolicyText = "Privacy Policy"
-    val andText = " and "
-    val termsAndConditionsText = "Term of Use"
+    val initialText = "Ao continuar você aceita nossa "
+    val privacyPolicyText = "Politica de privacidade"
+    val andText = " e "
+    val termsAndConditionsText = "Termos de uso"
 
     val annotatedString = buildAnnotatedString {
         append(initialText)
