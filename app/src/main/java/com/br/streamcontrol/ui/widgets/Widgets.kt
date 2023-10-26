@@ -29,7 +29,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -37,6 +36,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
@@ -104,13 +104,13 @@ fun HeadingTextComponent(value: String) {
 fun MyTextFieldComponent(
     labelValue: String, painterResource: Painter,
     onTextChanged: (String) -> Unit,
-    errorStatus: Boolean = false
+    errorStatus: Boolean = false,
 ) {
 
     val textValue = remember {
         mutableStateOf("")
     }
-    val isFocused by remember { mutableStateOf(false) }
+    val isFocused = remember { mutableStateOf(false) }
 
     val localFocusManager = LocalFocusManager.current
 
@@ -118,6 +118,7 @@ fun MyTextFieldComponent(
         modifier = Modifier
             .fillMaxWidth()
             .clip(componentShapes.small)
+            .onFocusChanged { hasFocus -> isFocused.value = hasFocus.isFocused }
             .focusRequester(FocusRequester()),
         label = { Text(text = labelValue) },
         colors = TextFieldDefaults.outlinedTextFieldColors(
@@ -136,11 +137,10 @@ fun MyTextFieldComponent(
         leadingIcon = {
             Icon(painter = painterResource, contentDescription = "")
         },
-
         supportingText = {
-            Text(text = if (!errorStatus) "Digite um e-mail válido" else "")
+            Text(text = if(isFocused.value) if (!errorStatus) "Digite um e-mail válido" else "" else "")
         },
-        isError = !errorStatus,
+        isError = if (isFocused.value) !errorStatus else false,
     )
 }
 
@@ -150,22 +150,23 @@ fun MyTextFieldComponent(
 fun PasswordTextFieldComponent(
     labelValue: String, painterResource: Painter,
     onTextSelected: (String) -> Unit,
-    errorStatus: Boolean = false
+    errorStatus: Boolean = false,
 ) {
 
-    val localFocusManager = LocalFocusManager.current
-    val password = remember {
-        mutableStateOf("")
-    }
+    val isFocused = remember { mutableStateOf(false) }
 
-    val passwordVisible = remember {
-        mutableStateOf(false)
-    }
+    val localFocusManager = LocalFocusManager.current
+    val password = remember { mutableStateOf("") }
+
+    val passwordVisible = remember { mutableStateOf(false) }
 
     OutlinedTextField(
         modifier = Modifier
             .fillMaxWidth()
-            .clip(componentShapes.small),
+            .clip(componentShapes.small)
+            .onFocusChanged { hasFocus ->
+                isFocused.value = hasFocus.isFocused
+            },
         label = { Text(text = labelValue) },
         colors = TextFieldDefaults.outlinedTextFieldColors(
             focusedBorderColor = MaterialTheme.colorScheme.primary,
@@ -209,10 +210,10 @@ fun PasswordTextFieldComponent(
 
         },
         supportingText = {
-            Text(text =  if (!errorStatus) "Digite uma senha válida" else "")
+            Text(text = if(isFocused.value) if (!errorStatus) "Digite uma senha válida" else "" else "")
         },
         visualTransformation = if (passwordVisible.value) VisualTransformation.None else PasswordVisualTransformation(),
-        isError = !errorStatus
+        isError = if (isFocused.value) !errorStatus else false,
     )
 }
 
@@ -220,7 +221,7 @@ fun PasswordTextFieldComponent(
 fun CheckboxComponent(
     value: String,
     onTextSelected: (String) -> Unit,
-    onCheckedChange: (Boolean) -> Unit
+    onCheckedChange: (Boolean) -> Unit,
 ) {
     Row(
         modifier = Modifier
@@ -393,7 +394,7 @@ fun ClickableLoginTextComponent(tryingToLogin: Boolean = true, onTextSelected: (
 @Composable
 fun AppToolbar(
     toolbarTitle: String, logoutButtonClicked: () -> Unit,
-    navigationIconClicked: () -> Unit
+    navigationIconClicked: () -> Unit,
 ) {
 
     TopAppBar(
@@ -451,7 +452,7 @@ fun NavigationDrawerHeader(value: String?) {
 @Composable
 fun NavigationDrawerBody(
     navigationDrawerItems: List<NavigationItem>,
-    onNavigationItemClicked: (NavigationItem) -> Unit
+    onNavigationItemClicked: (NavigationItem) -> Unit,
 ) {
     LazyColumn(modifier = Modifier.fillMaxWidth()) {
 
@@ -465,7 +466,7 @@ fun NavigationDrawerBody(
 @Composable
 fun NavigationItemRow(
     item: NavigationItem,
-    onNavigationItemClicked: (NavigationItem) -> Unit
+    onNavigationItemClicked: (NavigationItem) -> Unit,
 ) {
 
 

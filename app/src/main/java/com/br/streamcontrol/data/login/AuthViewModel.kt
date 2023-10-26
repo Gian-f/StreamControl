@@ -3,6 +3,7 @@ package com.br.streamcontrol.data.login
 import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import com.br.streamcontrol.data.rules.ValidationResult
 import com.br.streamcontrol.data.rules.Validator
 import com.br.streamcontrol.ui.routes.Router
 import com.br.streamcontrol.ui.routes.Screen
@@ -11,7 +12,15 @@ import com.google.firebase.auth.FirebaseAuth
 class AuthViewModel : ViewModel() {
     private val TAG = AuthViewModel::class.simpleName
 
-    var loginUIState = mutableStateOf(LoginUIState())
+    var isEmailFieldTouched = mutableStateOf(false)
+    var isPasswordFieldTouched = mutableStateOf(false)
+
+    var loginUIState = mutableStateOf(
+        LoginUIState(
+            emailError = false,
+            passwordError = false
+        )
+    )
 
     var allValidationsPassed = mutableStateOf(false)
 
@@ -24,12 +33,14 @@ class AuthViewModel : ViewModel() {
                 loginUIState.value = loginUIState.value.copy(
                     email = event.email
                 )
+                isEmailFieldTouched.value = true
             }
 
             is LoginUIEvent.PasswordChanged -> {
                 loginUIState.value = loginUIState.value.copy(
                     password = event.password
                 )
+                isPasswordFieldTouched.value = true
             }
 
             is LoginUIEvent.LoginButtonClicked -> {
@@ -40,23 +51,27 @@ class AuthViewModel : ViewModel() {
     }
 
     private fun validateLoginUIDataWithRules() {
-        val emailResult = Validator.validateEmail(
-            email = loginUIState.value.email
-        )
+        val emailResult = if (isEmailFieldTouched.value && loginUIState.value.email.isNotEmpty()) {
+            Validator.validateEmail(loginUIState.value.email)
+        } else {
+            ValidationResult(status = false)
+        }
 
-
-        val passwordResult = Validator.validatePassword(
-            password = loginUIState.value.password
-        )
+        val passwordResult =
+            if (isPasswordFieldTouched.value && loginUIState.value.password.isNotEmpty()) {
+                Validator.validatePassword(loginUIState.value.password)
+            } else {
+                ValidationResult(status = false)
+            }
 
         loginUIState.value = loginUIState.value.copy(
             emailError = emailResult.status,
             passwordError = passwordResult.status
         )
 
-        allValidationsPassed.value = emailResult.status && passwordResult.status
-
+        allValidationsPassed.value = emailResult.status == true && passwordResult.status == true
     }
+
 
     private fun login() {
 
@@ -68,21 +83,20 @@ class AuthViewModel : ViewModel() {
             .getInstance()
             .signInWithEmailAndPassword(email, password)
             .addOnCompleteListener {
-                Log.d(TAG,"Inside_login_success")
-                Log.d(TAG,"${it.isSuccessful}")
+                Log.d(TAG, "Inside_login_success")
+                Log.d(TAG, "${it.isSuccessful}")
 
-                if(it.isSuccessful){
+                if (it.isSuccessful) {
                     loginInProgress.value = false
                     Router.navigateTo(Screen.HomeScreen)
                 }
             }
             .addOnFailureListener {
-                Log.d(TAG,"Inside_login_failure")
-                Log.d(TAG,"${it.localizedMessage}")
+                Log.d(TAG, "Inside_login_failure")
+                Log.d(TAG, it.localizedMessage)
 
                 loginInProgress.value = false
 
             }
-
     }
 }
