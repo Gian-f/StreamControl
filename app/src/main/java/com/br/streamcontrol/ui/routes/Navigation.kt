@@ -21,7 +21,6 @@ private class ComposableBackNavigationHandler(enabled: Boolean) : OnBackPressedC
     override fun handleOnBackPressed() {
         onBackPressed()
     }
-
 }
 
 
@@ -36,8 +35,6 @@ internal fun ComposableHandler(
 
     DisposableEffect(dispatcher) {
         dispatcher.addCallback(handler)
-
-
         onDispose { handler.remove() }
     }
 

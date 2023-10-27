@@ -10,15 +10,26 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.LinearProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.br.streamcontrol.R
 import com.br.streamcontrol.data.auth.login.AuthViewModel
@@ -30,13 +41,15 @@ import com.br.streamcontrol.ui.widgets.ClickableLoginTextComponent
 import com.br.streamcontrol.ui.widgets.DividerTextComponent
 import com.br.streamcontrol.ui.widgets.HeadingTextComponent
 import com.br.streamcontrol.ui.widgets.MyTextFieldComponent
-import com.br.streamcontrol.ui.widgets.NormalTextComponent
 import com.br.streamcontrol.ui.widgets.PasswordTextFieldComponent
 
 @Composable
 fun LoginScreen(loginViewModel: AuthViewModel = viewModel()) {
 
-    Box {
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
         Image(
             painter = painterResource(id = R.drawable.banner),
             alignment = Alignment.Center,
@@ -56,7 +69,9 @@ fun LoginScreen(loginViewModel: AuthViewModel = viewModel()) {
             Image(
                 painter = painterResource(id = R.drawable.logo),
                 alignment = Alignment.TopCenter,
-                modifier = Modifier.fillMaxWidth().size(100.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .size(100.dp),
                 contentDescription = ""
             )
             Spacer(modifier = Modifier.height(50.dp))
@@ -103,13 +118,83 @@ fun LoginScreen(loginViewModel: AuthViewModel = viewModel()) {
             Spacer(modifier = Modifier.height(20.dp))
 
             ClickableLoginTextComponent(
-                tryingToLogin = false, onTextSelected = {
+                tryingToLogin = false,
+                onTextSelected = {
                     Router.navigateTo(Screen.SignUpScreen)
                 }
             )
         }
-        if (loginViewModel.loginInProgress.value) {
-            CircularProgressIndicator()
+        if (loginViewModel.loginError.value || loginViewModel.loginInProgress.value) {
+            LoginBottomSheet(
+                errorMessage = loginViewModel.errorMessage.value,
+                onDismiss = {
+                    loginViewModel.onEvent(LoginUIEvent.DismissError)
+                }
+            )
         }
     }
 }
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun LoginBottomSheet(
+    errorMessage: String?,
+    onDismiss: () -> Unit,
+) {
+
+    val sheetState = rememberModalBottomSheetState(true)
+    ModalBottomSheet(
+        sheetState = sheetState,
+        onDismissRequest = {
+            onDismiss.invoke()
+        },
+        content = {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+                if (errorMessage != null) {
+                    Text(
+                        text = "Atenção!",
+                        style = TextStyle(
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 28.sp
+                        ),
+                        modifier = Modifier.fillMaxWidth(),
+                        textAlign = TextAlign.Center
+                    )
+                    Spacer(modifier = Modifier.height(30.dp))
+                    Text(
+                        text = errorMessage,
+                        modifier = Modifier.fillMaxWidth(),
+                        fontSize = 22.sp,
+                        textAlign = TextAlign.Center
+                    )
+                    Spacer(modifier = Modifier.height(30.dp))
+
+                    Button(
+                        onClick = {
+                            onDismiss.invoke()
+                        },
+                        shape = RoundedCornerShape(15.dp),
+                    ) {
+                        Text(
+                            text = "OK",
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier.fillMaxWidth(),
+                            fontSize = 18.sp,
+                            color = Color.White,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
+                } else {
+                    CircularProgressIndicator()
+                }
+            }
+        }
+    )
+}
+

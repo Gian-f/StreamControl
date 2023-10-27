@@ -25,8 +25,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -99,7 +99,6 @@ fun HeadingTextComponent(value: String) {
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MyTextFieldComponent(
     labelValue: String, painterResource: Painter,
@@ -108,9 +107,7 @@ fun MyTextFieldComponent(
     errorStatus: Boolean = false,
 ) {
 
-    val textValue = remember {
-        mutableStateOf("")
-    }
+    val textValue = remember { mutableStateOf("") }
     val isFocused = remember { mutableStateOf(false) }
 
     val localFocusManager = LocalFocusManager.current
@@ -122,10 +119,10 @@ fun MyTextFieldComponent(
             .onFocusChanged { hasFocus -> isFocused.value = hasFocus.isFocused }
             .focusRequester(FocusRequester()),
         label = { Text(text = labelValue) },
-        colors = TextFieldDefaults.outlinedTextFieldColors(
+        colors = OutlinedTextFieldDefaults.colors(
+            cursorColor = MaterialTheme.colorScheme.primary,
             focusedBorderColor = MaterialTheme.colorScheme.primary,
             focusedLabelColor = MaterialTheme.colorScheme.primary,
-            cursorColor = MaterialTheme.colorScheme.primary,
         ),
         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
         singleLine = true,
@@ -146,7 +143,6 @@ fun MyTextFieldComponent(
 }
 
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PasswordTextFieldComponent(
     labelValue: String, painterResource: Painter,
@@ -169,10 +165,10 @@ fun PasswordTextFieldComponent(
                 isFocused.value = hasFocus.isFocused
             },
         label = { Text(text = labelValue) },
-        colors = TextFieldDefaults.outlinedTextFieldColors(
+        colors = OutlinedTextFieldDefaults.colors(
+            cursorColor = MaterialTheme.colorScheme.primary,
             focusedBorderColor = MaterialTheme.colorScheme.primary,
             focusedLabelColor = MaterialTheme.colorScheme.primary,
-            cursorColor = MaterialTheme.colorScheme.primary,
         ),
         keyboardOptions = KeyboardOptions(
             keyboardType = KeyboardType.Password,
@@ -314,9 +310,7 @@ fun ButtonComponent(value: String, onButtonClicked: () -> Unit, isEnabled: Boole
                 color = Color.White,
                 fontWeight = FontWeight.Bold
             )
-
         }
-
     }
 }
 
@@ -469,7 +463,6 @@ fun NavigationItemRow(
     item: NavigationItem,
     onNavigationItemClicked: (NavigationItem) -> Unit,
 ) {
-
 
     Row(
         modifier = Modifier

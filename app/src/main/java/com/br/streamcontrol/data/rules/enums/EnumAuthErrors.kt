@@ -19,3 +19,4 @@ enum class EnumAuthErrors(val message: String) {
     ERROR_WEAK_PASSWORD("A senha deve ter no mínimo 6 caracteres."),
     UNKNOWN_ERROR("Erro na autenticação.")
 }
+
