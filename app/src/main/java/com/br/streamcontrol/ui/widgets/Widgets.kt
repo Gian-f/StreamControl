@@ -474,7 +474,7 @@ fun NavigationItemRow(
     ) {
 
         Icon(
-            imageVector = item.icon,
+            imageVector = item.selectedIcon,
             contentDescription = item.description,
         )
 
