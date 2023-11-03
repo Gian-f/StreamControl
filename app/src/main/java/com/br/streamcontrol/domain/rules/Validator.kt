@@ -1,4 +1,4 @@
-package com.br.streamcontrol.data.rules
+package com.br.streamcontrol.domain.rules
 
 import android.util.Patterns
 

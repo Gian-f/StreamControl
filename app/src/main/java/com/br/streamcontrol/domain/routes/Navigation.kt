@@ -1,4 +1,4 @@
-package com.br.streamcontrol.ui.routes
+package com.br.streamcontrol.domain.routes
 
 import androidx.activity.ComponentActivity
 import androidx.activity.OnBackPressedCallback

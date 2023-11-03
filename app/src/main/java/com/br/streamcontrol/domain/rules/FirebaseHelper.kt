@@ -1,6 +1,6 @@
-package com.br.streamcontrol.data.rules
+package com.br.streamcontrol.domain.rules
 
-import com.br.streamcontrol.data.rules.enums.EnumAuthErrors
+import com.br.streamcontrol.domain.rules.enums.EnumAuthErrors
 
 fun handleFirebaseAuthErrorMessage(firebaseErrorMessage: String): String {
     return when (firebaseErrorMessage) {

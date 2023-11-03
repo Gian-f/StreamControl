@@ -1,10 +1,10 @@
-package com.br.streamcontrol.data.home
+package com.br.streamcontrol.domain.viewmodel
 
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.br.streamcontrol.ui.routes.Router
-import com.br.streamcontrol.ui.routes.Screen
+import com.br.streamcontrol.domain.routes.Router
+import com.br.streamcontrol.domain.routes.Screen
 import com.google.firebase.auth.FirebaseAuth
 
 class HomeViewModel : ViewModel() {
@@ -14,6 +14,10 @@ class HomeViewModel : ViewModel() {
     val isUserLoggedIn: MutableLiveData<Boolean> = MutableLiveData()
 
     val emailId: MutableLiveData<String> = MutableLiveData()
+
+    val username: MutableLiveData<String> = MutableLiveData()
+
+    val phoneNumber: MutableLiveData<String> = MutableLiveData()
 
 
     fun logout() {
@@ -50,7 +54,14 @@ class HomeViewModel : ViewModel() {
             it.email?.also { email ->
                 emailId.value = email
             }
+            it.displayName?.also { name ->
+                username.value = name
+                println(username.value)
+                println(name)
+            }
+            it.phoneNumber?.also { phone ->
+                phoneNumber.value = phone
+            }
         }
     }
-
 }

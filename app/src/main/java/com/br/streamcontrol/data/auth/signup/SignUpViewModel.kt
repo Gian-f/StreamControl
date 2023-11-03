@@ -3,14 +3,15 @@ package com.br.streamcontrol.data.auth.signup
 import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
-import com.br.streamcontrol.data.rules.Validator
-import com.br.streamcontrol.ui.routes.Router
-import com.br.streamcontrol.ui.routes.Screen
+import com.br.streamcontrol.domain.rules.Validator
+import com.br.streamcontrol.domain.routes.Router
+import com.br.streamcontrol.domain.routes.Screen
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.UserProfileChangeRequest
 
-class SignupViewModel : ViewModel() {
+class SignUpViewModel : ViewModel() {
 
-    private val TAG = SignupViewModel::class.simpleName
+    private val TAG = SignUpViewModel::class.simpleName
 
 
     var registrationUIState = mutableStateOf(RegistrationUIState())
@@ -132,12 +133,23 @@ class SignupViewModel : ViewModel() {
         FirebaseAuth
             .getInstance()
             .createUserWithEmailAndPassword(email, password)
-            .addOnCompleteListener {
+            .addOnCompleteListener { result ->
                 Log.d(TAG, "Inside_OnCompleteListener")
-                Log.d(TAG, " isSuccessful = ${it.isSuccessful}")
+                Log.d(TAG, " isSuccessful = ${result.isSuccessful}")
+                if (result.isSuccessful) {
+                    val user = result.result?.user
+                    val userProfileChangeRequest = UserProfileChangeRequest.Builder()
+                        .setDisplayName("${registrationUIState.value.firstName} ${registrationUIState.value.lastName}")
+                        .build()
+                    user?.updateProfile(userProfileChangeRequest)?.addOnCompleteListener {
+                        Log.d(TAG, " isSuccessful = ${result.isSuccessful}")
+
+                    }
+                }
 
                 signUpInProgress.value = false
-                if (it.isSuccessful) {
+
+                if (result.isSuccessful) {
                     Router.navigateTo(Screen.HomeScreen)
                 }
             }
@@ -147,6 +159,5 @@ class SignupViewModel : ViewModel() {
                 Log.d(TAG, "Exception= ${it.localizedMessage}")
             }
     }
-
 
 }

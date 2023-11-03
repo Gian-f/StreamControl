@@ -7,15 +7,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.br.streamcontrol.data.home.HomeViewModel
-import com.br.streamcontrol.ui.routes.Router
-import com.br.streamcontrol.ui.routes.Screen
-import com.br.streamcontrol.ui.screens.BottomNavigation
+import com.br.streamcontrol.domain.viewmodel.HomeViewModel
+import com.br.streamcontrol.domain.routes.Router
+import com.br.streamcontrol.domain.routes.Screen
 import com.br.streamcontrol.ui.screens.HomeScreen
-import com.br.streamcontrol.ui.screens.LoginScreen
-import com.br.streamcontrol.ui.screens.bottomNavigation.SettingsScreen
-import com.br.streamcontrol.ui.screens.SignUpScreen
-import com.br.streamcontrol.ui.screens.bottomNavigation.ProfileScreen
+import com.br.streamcontrol.ui.screens.auth.LoginScreen
+import com.br.streamcontrol.ui.screens.auth.SignUpScreen
 
 @Composable
 fun App(homeViewModel: HomeViewModel = viewModel()) {
@@ -45,13 +42,7 @@ fun App(homeViewModel: HomeViewModel = viewModel()) {
                     HomeScreen()
                 }
 
-                is Screen.ProfileScreen -> {
-                    ProfileScreen()
-                }
-
-                is Screen.SettingsScreen -> {
-                    SettingsScreen()
-                }
+                else -> {}
             }
         }
     }

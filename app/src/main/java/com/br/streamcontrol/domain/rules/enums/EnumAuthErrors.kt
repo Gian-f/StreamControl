@@ -1,4 +1,4 @@
-package com.br.streamcontrol.data.rules.enums
+package com.br.streamcontrol.domain.rules.enums
 
 enum class EnumAuthErrors(val message: String) {
     ERROR_INVALID_CUSTOM_TOKEN("Token personalizado inválido."),

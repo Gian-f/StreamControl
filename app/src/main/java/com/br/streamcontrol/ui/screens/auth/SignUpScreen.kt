@@ -1,4 +1,4 @@
-package com.br.streamcontrol.ui.screens
+package com.br.streamcontrol.ui.screens.auth
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -17,10 +17,10 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.br.streamcontrol.R
 import com.br.streamcontrol.data.auth.signup.SignupUIEvent
-import com.br.streamcontrol.data.auth.signup.SignupViewModel
-import com.br.streamcontrol.ui.routes.Router
-import com.br.streamcontrol.ui.routes.Screen
-import com.br.streamcontrol.ui.routes.SystemBackButtonHandler
+import com.br.streamcontrol.data.auth.signup.SignUpViewModel
+import com.br.streamcontrol.domain.routes.Router
+import com.br.streamcontrol.domain.routes.Screen
+import com.br.streamcontrol.domain.routes.SystemBackButtonHandler
 import com.br.streamcontrol.ui.widgets.ButtonComponent
 import com.br.streamcontrol.ui.widgets.CheckboxComponent
 import com.br.streamcontrol.ui.widgets.ClickableLoginTextComponent
@@ -31,7 +31,7 @@ import com.br.streamcontrol.ui.widgets.NormalTextComponent
 import com.br.streamcontrol.ui.widgets.PasswordTextFieldComponent
 
 @Composable
-fun SignUpScreen(signUpViewModel: SignupViewModel = viewModel()) {
+fun SignUpScreen(signUpViewModel: SignUpViewModel = viewModel()) {
 
     Box(
         modifier = Modifier.fillMaxSize(),

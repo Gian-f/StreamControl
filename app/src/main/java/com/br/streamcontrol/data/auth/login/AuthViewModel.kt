@@ -2,11 +2,11 @@ package com.br.streamcontrol.data.auth.login
 
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
-import com.br.streamcontrol.data.rules.ValidationResult
-import com.br.streamcontrol.data.rules.Validator
-import com.br.streamcontrol.data.rules.handleFirebaseAuthErrorMessage
-import com.br.streamcontrol.ui.routes.Router
-import com.br.streamcontrol.ui.routes.Screen
+import com.br.streamcontrol.domain.rules.ValidationResult
+import com.br.streamcontrol.domain.rules.Validator
+import com.br.streamcontrol.domain.rules.handleFirebaseAuthErrorMessage
+import com.br.streamcontrol.domain.routes.Router
+import com.br.streamcontrol.domain.routes.Screen
 import com.google.firebase.auth.FirebaseAuth
 
 class AuthViewModel : ViewModel() {

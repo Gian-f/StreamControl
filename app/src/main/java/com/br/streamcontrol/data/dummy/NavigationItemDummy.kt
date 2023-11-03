@@ -12,7 +12,7 @@ import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material.icons.outlined.Settings
 import com.br.streamcontrol.data.model.NavigationItem
-import com.br.streamcontrol.ui.routes.Screen
+import com.br.streamcontrol.domain.routes.Screen
 
 object NavigationItemDummy {
     val navItems = listOf(

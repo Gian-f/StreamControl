@@ -1,4 +1,4 @@
-package com.br.streamcontrol.ui.routes
+package com.br.streamcontrol.domain.routes
 
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
