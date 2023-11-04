@@ -110,7 +110,7 @@ private fun HomeContent(
                 modifier = Modifier.padding(horizontal = 16.dp)
             )
             Text(
-                text = "${homeViewModel.username.value}",
+                text = "${homeViewModel.emailId.value}",
                 fontSize = TextUnit(22F, TextUnitType.Sp),
                 fontWeight = FontWeight.SemiBold,
                 modifier = Modifier.padding(horizontal = 16.dp)
