@@ -1,11 +1,13 @@
 package com.br.streamcontrol.domain.viewmodel
 
+import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.br.streamcontrol.domain.routes.Router
 import com.br.streamcontrol.domain.routes.Screen
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.UserProfileChangeRequest
 
 class HomeViewModel : ViewModel() {
 
@@ -18,6 +20,12 @@ class HomeViewModel : ViewModel() {
     val username: MutableLiveData<String> = MutableLiveData()
 
     val phoneNumber: MutableLiveData<String> = MutableLiveData()
+
+    val userPhoto: MutableLiveData<Uri> = MutableLiveData()
+
+    val photo: Uri? = FirebaseAuth.getInstance().currentUser?.photoUrl
+
+    var isSaving = false
 
 
     fun logout() {
@@ -34,9 +42,7 @@ class HomeViewModel : ViewModel() {
                 Log.d(TAG, "Inside sign out is not complete")
             }
         }
-
         firebaseAuth.addAuthStateListener(authStateListener)
-
     }
 
     fun checkForActiveSession() {
@@ -59,9 +65,36 @@ class HomeViewModel : ViewModel() {
                 println(username.value)
                 println(name)
             }
-            it.phoneNumber?.also { phone ->
-                phoneNumber.value = phone
+            it.photoUrl?.also { photo ->
+                userPhoto.value = photo
             }
         }
     }
+
+    fun updateUser() {
+        val userProfileChangeRequest = UserProfileChangeRequest.Builder()
+            .setPhotoUri(userPhoto.value)
+            .setDisplayName(username.value)
+            .build()
+
+        FirebaseAuth.getInstance().currentUser?.updateProfile(userProfileChangeRequest)
+            ?.addOnSuccessListener {
+                if (emailId.value != null) {
+                    FirebaseAuth.getInstance().currentUser?.updateEmail(emailId.value ?: "")
+                        ?.addOnSuccessListener {
+                            // Email update successful
+                            // You can perform further actions if needed
+                        }
+                        ?.addOnFailureListener { e ->
+                            // Handle email update failure
+                            Log.e(TAG, "Error updating email: ${e.message}")
+                        }
+                }
+            }
+            ?.addOnFailureListener { e ->
+                // Handle profile update failure
+                Log.e(TAG, "Error updating profile: ${e.message}")
+            }
+    }
+
 }

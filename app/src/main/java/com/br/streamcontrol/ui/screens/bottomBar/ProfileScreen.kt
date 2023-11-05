@@ -4,7 +4,7 @@ import android.Manifest
 import android.content.Context
 import android.graphics.Bitmap
 import android.net.Uri
-import android.provider.MediaStore
+import android.os.Handler
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedVisibility
@@ -32,9 +32,13 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.CameraAlt
 import androidx.compose.material.icons.outlined.Cancel
+import androidx.compose.material.icons.outlined.Email
+import androidx.compose.material.icons.outlined.LocationOn
+import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material.icons.outlined.PhotoLibrary
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -45,6 +49,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -53,7 +58,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
@@ -66,11 +70,14 @@ import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.br.streamcontrol.domain.viewmodel.HomeViewModel
+import com.br.streamcontrol.domain.viewmodel.LocationViewModel
+import com.br.streamcontrol.ui.permissions.RequestPermission
+import com.br.streamcontrol.ui.screens.dialogs.LoadingBottomSheet
+import com.br.streamcontrol.util.bitmapToUri
 import kotlinx.coroutines.launch
-import java.io.ByteArrayOutputStream
-import java.io.IOException
 
 
 @Composable
@@ -82,6 +89,9 @@ fun ProfileContent(
     val focusManager = LocalFocusManager.current
     var isModalSheetVisible by remember { mutableStateOf(false) }
     var imageUri by remember { mutableStateOf<Uri?>(null) }
+    var isSaving by remember { mutableStateOf(false) }
+    val locationViewModel: LocationViewModel = viewModel()
+    RequestPermission(locationViewModel)
 
     Box(
         modifier = Modifier
@@ -124,7 +134,6 @@ fun ProfileContent(
                                     contentDescription = null,
                                     tint = MaterialTheme.colorScheme.onSurfaceVariant
                                 )
-
                             }
                         }
                     }
@@ -141,6 +150,12 @@ fun ProfileContent(
                     value = homeViewModel.username.value ?: text,
                     onValueChange = { text = it },
                     singleLine = true,
+                    leadingIcon = {
+                        Icon(
+                            imageVector = Icons.Outlined.Person,
+                            contentDescription = "Nome Completo"
+                        )
+                    },
                     trailingIcon = {
                         AnimatedVisibility(
                             visible = text.isNotBlank(),
@@ -172,6 +187,9 @@ fun ProfileContent(
                     label = { Text("E-mail") },
                     value = homeViewModel.emailId.value ?: text,
                     onValueChange = { text = it },
+                    leadingIcon = {
+                        Icon(imageVector = Icons.Outlined.Email, contentDescription = "E-mail")
+                    },
                     trailingIcon = {
                         AnimatedVisibility(
                             visible = text.isNotBlank(),
@@ -194,25 +212,18 @@ fun ProfileContent(
                 )
             }
             item {
-                var text by remember { mutableStateOf("") }
+                var text = locationViewModel.cityLiveData.value ?: ""
                 OutlinedTextField(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 16.dp),
-                    label = { Text("Cidade") },
+                    label = { Text("Mora em") },
                     value = text,
                     onValueChange = { text = it },
-                    trailingIcon = {
-                        AnimatedVisibility(
-                            visible = text.isNotBlank(),
-                            enter = fadeIn(),
-                            exit = fadeOut()
-                        ) {
-                            IconButton(onClick = { text = "" }) {
-                                Icon(Icons.Outlined.Cancel, "Clear")
-                            }
-                        }
+                    leadingIcon = {
+                        Icon(imageVector = Icons.Outlined.LocationOn, contentDescription = "Cidade")
                     },
+                    readOnly = true,
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Text,
                         imeAction = ImeAction.Next
@@ -226,7 +237,11 @@ fun ProfileContent(
             item { }
             item {
                 Button(
-                    onClick = {},
+                    onClick = {
+                        isSaving = true
+                        homeViewModel.updateUser()
+                        isSaving = false
+                    },
                     modifier = Modifier
                         .fillMaxWidth()
                         .heightIn(48.dp),
@@ -248,12 +263,20 @@ fun ProfileContent(
                             ),
                         contentAlignment = Alignment.Center
                     ) {
-                        Text(
-                            text = "Salvar",
-                            fontSize = 18.sp,
-                            color = Color.White,
-                            fontWeight = FontWeight.Bold
-                        )
+                        if (homeViewModel.isSaving) {
+                            CircularProgressIndicator(
+                                color = Color.White,
+                                strokeWidth = 2.dp,
+                                modifier = Modifier.size(16.dp)
+                            )
+                        } else {
+                            Text(
+                                text = "Salvar",
+                                fontSize = 18.sp,
+                                color = Color.White,
+                                fontWeight = FontWeight.Bold
+                            )
+                        }
                     }
                 }
             }
@@ -268,11 +291,11 @@ fun ProfileContent(
             context = LocalContext.current,
             onImageSelected = { uri ->
                 imageUri = uri
+                homeViewModel.userPhoto.value = uri
             }
         )
     }
 }
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -288,12 +311,10 @@ fun ModalBottomSheetWithVerticalActions(
             onImageSelected(uri)
         }
 
-
     val cameraLauncher =
         rememberLauncherForActivityResult(contract = ActivityResultContracts.TakePicturePreview()) { bitmap: Bitmap? ->
             onImageSelected(bitmap?.let { bitmapToUri(context, it) })
         }
-
 
     val cameraPermission =
         rememberLauncherForActivityResult(contract = ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
@@ -350,30 +371,3 @@ fun ModalBottomSheetWithVerticalActions(
         }
     }
 }
-
-fun bitmapToUri(context: Context, bitmap: Bitmap): Uri? {
-    var uri: Uri? = null
-    val bytes = ByteArrayOutputStream()
-
-    try {
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes)
-        val imagePath: String = MediaStore.Images.Media.insertImage(
-            context.contentResolver,
-            bitmap,
-            "temp_image",
-            null
-        )
-        uri = Uri.parse(imagePath)
-    } catch (e: Exception) {
-        e.printStackTrace()
-    } finally {
-        try {
-            bytes.close()
-        } catch (e: IOException) {
-            e.printStackTrace()
-        }
-    }
-
-    return uri
-}
-

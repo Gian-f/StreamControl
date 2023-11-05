@@ -72,13 +72,18 @@ dependencies {
     implementation("com.google.dagger:hilt-android:2.48")
     implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
     implementation("androidx.room:room-common:2.6.0")
+    implementation("com.google.android.gms:play-services-location:21.0.1")
     ksp("com.google.dagger:hilt-android-compiler:2.48")
 
+    // Splash Screen-API
+    implementation("androidx.core:core-splashscreen:1.0.1")
+
+
     //Retrofit
-    implementation ("com.squareup.retrofit2:retrofit:2.9.0")
-    implementation ("com.squareup.retrofit2:converter-gson:2.9.0")
-    implementation ("com.squareup.okhttp3:okhttp:5.0.0-alpha.2")
-    implementation ("com.squareup.okhttp3:logging-interceptor:5.0.0-alpha.2")
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+    implementation("com.squareup.okhttp3:okhttp:5.0.0-alpha.2")
+    implementation("com.squareup.okhttp3:logging-interceptor:5.0.0-alpha.2")
 
     // Room
     val roomVersion = "2.6.0"
@@ -87,7 +92,7 @@ dependencies {
     ksp("androidx.room:room-compiler:$roomVersion")
 
     // Firebase
-    implementation ("com.google.firebase:firebase-auth:22.2.0")
+    implementation("com.google.firebase:firebase-auth:22.2.0")
     implementation(platform("com.google.firebase:firebase-bom:32.4.0"))
 
     // Test
