@@ -1,5 +1,6 @@
 package com.br.streamcontrol.data.model
 
+import android.net.Uri
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
@@ -9,6 +10,5 @@ data class User(
     val id: Int = 0,
     val name: String,
     val email: String,
-    val phoneNumber: String,
     val photo: String
 )

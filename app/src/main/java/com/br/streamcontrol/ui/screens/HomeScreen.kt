@@ -1,6 +1,5 @@
 package com.br.streamcontrol.ui.screens
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -59,6 +58,7 @@ fun HomeScreen(homeViewModel: HomeViewModel = viewModel()) {
     val locationViewModel: LocationViewModel = viewModel()
     RequestPermission(locationViewModel)
     homeViewModel.getUserData()
+    homeViewModel.getAllUsers()
 
     Scaffold(
         topBar = {

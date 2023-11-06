@@ -5,6 +5,7 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Handler
+import android.os.Looper
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedVisibility
@@ -45,11 +46,11 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -75,7 +76,6 @@ import coil.compose.AsyncImage
 import com.br.streamcontrol.domain.viewmodel.HomeViewModel
 import com.br.streamcontrol.domain.viewmodel.LocationViewModel
 import com.br.streamcontrol.ui.permissions.RequestPermission
-import com.br.streamcontrol.ui.screens.dialogs.LoadingBottomSheet
 import com.br.streamcontrol.util.bitmapToUri
 import kotlinx.coroutines.launch
 
@@ -91,6 +91,7 @@ fun ProfileContent(
     var imageUri by remember { mutableStateOf<Uri?>(null) }
     var isSaving by remember { mutableStateOf(false) }
     val locationViewModel: LocationViewModel = viewModel()
+    val handler = Handler(Looper.getMainLooper())
     RequestPermission(locationViewModel)
 
     Box(
@@ -113,7 +114,7 @@ fun ProfileContent(
                     Surface(
                         onClick = { isModalSheetVisible = true },
                         color = MaterialTheme.colorScheme.surfaceVariant,
-                        shape = CircleShape
+                        shape = CircleShape,
                     ) {
                         if (imageUri != null) {
                             isModalSheetVisible = false
@@ -239,8 +240,10 @@ fun ProfileContent(
                 Button(
                     onClick = {
                         isSaving = true
+                        handler.postDelayed({
+                            isSaving = false
+                        }, 2000)
                         homeViewModel.updateUser()
-                        isSaving = false
                     },
                     modifier = Modifier
                         .fillMaxWidth()
@@ -263,7 +266,7 @@ fun ProfileContent(
                             ),
                         contentAlignment = Alignment.Center
                     ) {
-                        if (homeViewModel.isSaving) {
+                        if (isSaving) {
                             CircularProgressIndicator(
                                 color = Color.White,
                                 strokeWidth = 2.dp,

@@ -2,14 +2,26 @@ package com.br.streamcontrol.domain.viewmodel
 
 import android.net.Uri
 import android.util.Log
+import androidx.core.net.toUri
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.br.streamcontrol.data.model.User
+import com.br.streamcontrol.domain.repository.UserRepositoryImpl
 import com.br.streamcontrol.domain.routes.Router
 import com.br.streamcontrol.domain.routes.Screen
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.UserProfileChangeRequest
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineExceptionHandler
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class HomeViewModel : ViewModel() {
+@HiltViewModel
+class HomeViewModel @Inject constructor(
+    private val repository: UserRepositoryImpl
+) : ViewModel() {
 
     private val TAG = HomeViewModel::class.simpleName
 
@@ -19,14 +31,35 @@ class HomeViewModel : ViewModel() {
 
     val username: MutableLiveData<String> = MutableLiveData()
 
-    val phoneNumber: MutableLiveData<String> = MutableLiveData()
-
     val userPhoto: MutableLiveData<Uri> = MutableLiveData()
 
-    val photo: Uri? = FirebaseAuth.getInstance().currentUser?.photoUrl
+    var photo: Uri? = null
 
-    var isSaving = false
+    fun saveUser() {
+        viewModelScope.launch(Dispatchers.IO + CoroutineExceptionHandler { _, throwable ->
+            Log.e("ERRO Location ", "$throwable")
+        }) {
+            val user = userPhoto.value?.let { photo ->
+                User(
+                    email = emailId.value ?: "",
+                    name = username.value ?: "",
+                    photo = photo.toString(),
+                )
+            }
+            if (user != null) {
+                repository.insertUser(user)
+            }
+        }
+    }
 
+    fun getAllUsers() {
+        viewModelScope.launch(Dispatchers.IO + CoroutineExceptionHandler { _, throwable ->
+            Log.e("ERRO Location ", "$throwable")
+        }) {
+            val user = repository.getUser()
+            photo = user.last().photo.toUri()
+        }
+    }
 
     fun logout() {
 
@@ -95,6 +128,7 @@ class HomeViewModel : ViewModel() {
                 // Handle profile update failure
                 Log.e(TAG, "Error updating profile: ${e.message}")
             }
+        saveUser()
     }
 
 }
