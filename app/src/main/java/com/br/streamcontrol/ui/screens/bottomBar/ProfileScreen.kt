@@ -144,13 +144,13 @@ fun ProfileContent(
                 }
             }
             item {
-                var text by remember { mutableStateOf("") }
+                var text by remember { mutableStateOf(homeViewModel.username.value) }
                 OutlinedTextField(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 16.dp),
                     label = { Text("Nome Completo") },
-                    value = homeViewModel.username.value ?: text,
+                    value = text ?: "",
                     onValueChange = { text = it },
                     singleLine = true,
                     leadingIcon = {
@@ -160,13 +160,15 @@ fun ProfileContent(
                         )
                     },
                     trailingIcon = {
-                        AnimatedVisibility(
-                            visible = text.isNotBlank(),
-                            enter = fadeIn(),
-                            exit = fadeOut()
-                        ) {
-                            IconButton(onClick = { text = "" }) {
-                                Icon(Icons.Outlined.Cancel, "Clear")
+                        text?.let {
+                            AnimatedVisibility(
+                                visible = it.isNotBlank(),
+                                enter = fadeIn(),
+                                exit = fadeOut()
+                            ) {
+                                IconButton(onClick = { text = "" }) {
+                                    Icon(Icons.Outlined.Cancel, "Clear")
+                                }
                             }
                         }
                     },
@@ -182,25 +184,27 @@ fun ProfileContent(
 
             }
             item {
-                var text by remember { mutableStateOf("") }
+                var text by remember { mutableStateOf(homeViewModel.emailId.value) }
                 OutlinedTextField(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 16.dp),
                     label = { Text("E-mail") },
-                    value = homeViewModel.emailId.value ?: text,
+                    value = text?: "",
                     onValueChange = { text = it },
                     leadingIcon = {
                         Icon(imageVector = Icons.Outlined.Email, contentDescription = "E-mail")
                     },
                     trailingIcon = {
-                        AnimatedVisibility(
-                            visible = text.isNotBlank(),
-                            enter = fadeIn(),
-                            exit = fadeOut()
-                        ) {
-                            IconButton(onClick = { text = "" }) {
-                                Icon(Icons.Outlined.Cancel, "Clear")
+                        text?.let {
+                            AnimatedVisibility(
+                                visible = it.isNotBlank(),
+                                enter = fadeIn(),
+                                exit = fadeOut()
+                            ) {
+                                IconButton(onClick = { text = "" }) {
+                                    Icon(Icons.Outlined.Cancel, "Clear")
+                                }
                             }
                         }
                     },

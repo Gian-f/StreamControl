@@ -2,6 +2,7 @@ package com.br.streamcontrol.ui.screens.topBar
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.NotificationsNone
+import androidx.compose.material.icons.outlined.Notifications
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -22,7 +23,7 @@ fun TopAppBarForHome() {
                 onClick = { /* Ação para a tela inicial */ },
             ) {
                 Icon(
-                    imageVector = Icons.Default.NotificationsNone,
+                    imageVector = Icons.Outlined.Notifications,
                     contentDescription = "Notifications"
                 )
             }

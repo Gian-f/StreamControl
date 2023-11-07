@@ -68,12 +68,12 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    private fun deleteAll() {
+    fun deleteAll() {
         viewModelScope.launch(Dispatchers.IO + CoroutineExceptionHandler { _, throwable ->
             Log.e(TAG, "$throwable")
         }) {
             repository.deleteAllUser()
-
+            localUserPhoto.postValue(null)
         }
     }
 

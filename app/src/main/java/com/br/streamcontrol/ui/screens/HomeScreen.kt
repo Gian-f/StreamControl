@@ -10,7 +10,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
@@ -83,6 +85,16 @@ fun HomeScreen(homeViewModel: HomeViewModel = viewModel()) {
         bottomBar = {
             BottomNavigation(selectedItemState, homeViewModel)
         },
+        floatingActionButton = {
+            if (selectedItemState.intValue == 0) {
+                ExtendedFloatingActionButton(
+                    onClick = { /*TODO*/ },
+                    content = {
+                        Icon(imageVector = Icons.Filled.Add, contentDescription = "")
+                    }
+                )
+            }
+        }
     )
 
     SystemBackButtonHandler {
