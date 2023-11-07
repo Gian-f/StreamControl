@@ -21,4 +21,6 @@
     <string name="menu">Menu</string>
     <string name="navigation_header">Menu do Aplicativo</string>
 
+    <string name="deny_permissions">Permissões negadas podem resultar em funcionalidades indisponíveis.😔</string>
+
 </resources>

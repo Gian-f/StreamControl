@@ -20,6 +20,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -80,7 +81,7 @@ fun HomeScreen(homeViewModel: HomeViewModel = viewModel()) {
             }
         },
         bottomBar = {
-            BottomNavigation(selectedItemState)
+            BottomNavigation(selectedItemState, homeViewModel)
         },
     )
 
@@ -101,8 +102,11 @@ fun HomeScreen(homeViewModel: HomeViewModel = viewModel()) {
 @Composable
 private fun HomeContent(
     contentPadding: PaddingValues,
-    homeViewModel: HomeViewModel
+    homeViewModel: HomeViewModel,
 ) {
+    val imageUri by remember {
+        mutableStateOf(homeViewModel.localUserPhoto.value)
+    }
     Row(
         horizontalArrangement = Arrangement.Start,
         modifier = Modifier
@@ -114,11 +118,11 @@ private fun HomeContent(
             shape = CircleShape,
             modifier = Modifier.padding(start = 8.dp)
         ) {
-            if (homeViewModel.photo != null) {
+            if (imageUri != null) {
                 AsyncImage(
                     modifier = Modifier.size(50.dp),
-                    contentScale = ContentScale.FillWidth,
-                    model = homeViewModel.photo,
+                    contentScale = ContentScale.FillBounds,
+                    model = imageUri,
                     contentDescription = null,
                     alignment = Alignment.Center
                 )
@@ -152,8 +156,14 @@ private fun HomeContent(
     }
 }
 
+@Preview
 @Composable
-fun BottomNavigation(selectedItemState: MutableState<Int>) {
+fun HomeScreenPreview() {
+    HomeScreen()
+}
+
+@Composable
+fun BottomNavigation(selectedItemState: MutableState<Int>, homeViewModel: HomeViewModel) {
     NavigationBar {
         navItems.forEachIndexed { index, item ->
             NavigationBarItem(
@@ -161,14 +171,11 @@ fun BottomNavigation(selectedItemState: MutableState<Int>) {
                 selected = selectedItemState.value == index,
                 onClick = {
                     selectedItemState.value = index
+                    if (index == 0) {
+                        homeViewModel.getAllUsers()
+                    }
                 }
             )
         }
     }
-}
-
-@Preview
-@Composable
-fun HomeScreenPreview() {
-    HomeScreen()
 }

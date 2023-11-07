@@ -6,6 +6,7 @@ import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Handler
 import android.os.Looper
+import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedVisibility
@@ -75,7 +76,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.br.streamcontrol.domain.viewmodel.HomeViewModel
 import com.br.streamcontrol.domain.viewmodel.LocationViewModel
-import com.br.streamcontrol.ui.permissions.RequestPermission
 import com.br.streamcontrol.util.bitmapToUri
 import kotlinx.coroutines.launch
 
@@ -83,16 +83,18 @@ import kotlinx.coroutines.launch
 @Composable
 fun ProfileContent(
     contentPadding: PaddingValues,
-    homeViewModel: HomeViewModel
+    homeViewModel: HomeViewModel,
 ) {
     homeViewModel.getUserData()
+    remember { SnackbarHostState() }
     val focusManager = LocalFocusManager.current
+    val context = LocalContext.current
+    val scope = rememberCoroutineScope()
     var isModalSheetVisible by remember { mutableStateOf(false) }
-    var imageUri by remember { mutableStateOf<Uri?>(null) }
+    var imageUri by remember { mutableStateOf(homeViewModel.localUserPhoto.value) }
     var isSaving by remember { mutableStateOf(false) }
     val locationViewModel: LocationViewModel = viewModel()
     val handler = Handler(Looper.getMainLooper())
-    RequestPermission(locationViewModel)
 
     Box(
         modifier = Modifier
@@ -119,9 +121,9 @@ fun ProfileContent(
                         if (imageUri != null) {
                             isModalSheetVisible = false
                             AsyncImage(
-                                modifier = Modifier.size(96.dp),
-                                contentScale = ContentScale.FillWidth,
                                 model = imageUri,
+                                modifier = Modifier.size(96.dp),
+                                contentScale = ContentScale.FillBounds,
                                 contentDescription = null,
                                 alignment = Alignment.Center
                             )
@@ -213,7 +215,7 @@ fun ProfileContent(
                 )
             }
             item {
-                var text = locationViewModel.cityLiveData.value ?: ""
+                var text = locationViewModel.cityLiveData.value ?: "Não fornecido pelo usuário!"
                 OutlinedTextField(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -242,6 +244,11 @@ fun ProfileContent(
                         isSaving = true
                         handler.postDelayed({
                             isSaving = false
+                            Toast.makeText(
+                                context,
+                                "Operação realizada com sucesso!",
+                                Toast.LENGTH_SHORT
+                            ).show()
                         }, 2000)
                         homeViewModel.updateUser()
                     },
@@ -294,7 +301,7 @@ fun ProfileContent(
             context = LocalContext.current,
             onImageSelected = { uri ->
                 imageUri = uri
-                homeViewModel.userPhoto.value = uri
+                homeViewModel.localUserPhoto.value = uri
             }
         )
     }
@@ -306,7 +313,7 @@ fun ModalBottomSheetWithVerticalActions(
     isVisible: Boolean = false,
     onDismiss: () -> Unit,
     onImageSelected: (Uri?) -> Unit,
-    context: Context
+    context: Context,
 ) {
 
     val galleryLauncher =

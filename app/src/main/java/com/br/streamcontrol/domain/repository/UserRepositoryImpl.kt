@@ -14,4 +14,8 @@ class UserRepositoryImpl @Inject constructor(
     override suspend fun getUser(): List<User> {
         return dao.getAllUser()
     }
+
+    override suspend fun deleteAllUser() {
+        return dao.deleteAllUser()
+    }
 }

@@ -14,13 +14,15 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.UserProfileChangeRequest
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineExceptionHandler
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val repository: UserRepositoryImpl
+    private val repository: UserRepositoryImpl,
 ) : ViewModel() {
 
     private val TAG = HomeViewModel::class.simpleName
@@ -31,15 +33,16 @@ class HomeViewModel @Inject constructor(
 
     val username: MutableLiveData<String> = MutableLiveData()
 
-    val userPhoto: MutableLiveData<Uri> = MutableLiveData()
+    val localUserPhoto: MutableLiveData<Uri> = MutableLiveData()
 
-    var photo: Uri? = null
+    val fireUserPhoto = MutableLiveData<Uri>(FirebaseAuth.getInstance().currentUser?.photoUrl)
 
-    fun saveUser() {
+
+    private fun saveLocalUser() {
         viewModelScope.launch(Dispatchers.IO + CoroutineExceptionHandler { _, throwable ->
             Log.e("ERRO Location ", "$throwable")
         }) {
-            val user = userPhoto.value?.let { photo ->
+            val user = localUserPhoto.value?.let { photo ->
                 User(
                     email = emailId.value ?: "",
                     name = username.value ?: "",
@@ -54,22 +57,33 @@ class HomeViewModel @Inject constructor(
 
     fun getAllUsers() {
         viewModelScope.launch(Dispatchers.IO + CoroutineExceptionHandler { _, throwable ->
-            Log.e("ERRO Location ", "$throwable")
+            Log.e(TAG, "$throwable")
         }) {
             val user = repository.getUser()
-            photo = user.last().photo.toUri()
+            withContext(Dispatchers.Main) {
+                localUserPhoto.value = user.lastOrNull()?.photo?.toUri()
+                Log.d("teste photo", "${localUserPhoto.value}")
+                Log.d("teste photo", "${fireUserPhoto.value}")
+            }
+        }
+    }
+
+    private fun deleteAll() {
+        viewModelScope.launch(Dispatchers.IO + CoroutineExceptionHandler { _, throwable ->
+            Log.e(TAG, "$throwable")
+        }) {
+            repository.deleteAllUser()
+
         }
     }
 
     fun logout() {
-
         val firebaseAuth = FirebaseAuth.getInstance()
-
         firebaseAuth.signOut()
-
         val authStateListener = FirebaseAuth.AuthStateListener {
             if (it.currentUser == null) {
                 Log.d(TAG, "Inside sign outsuccess")
+                deleteAll()
                 Router.navigateTo(Screen.LoginScreen)
             } else {
                 Log.d(TAG, "Inside sign out is not complete")
@@ -95,40 +109,25 @@ class HomeViewModel @Inject constructor(
             }
             it.displayName?.also { name ->
                 username.value = name
-                println(username.value)
-                println(name)
-            }
-            it.photoUrl?.also { photo ->
-                userPhoto.value = photo
             }
         }
     }
 
     fun updateUser() {
-        val userProfileChangeRequest = UserProfileChangeRequest.Builder()
-            .setPhotoUri(userPhoto.value)
-            .setDisplayName(username.value)
-            .build()
+        FirebaseAuth.getInstance().currentUser?.let { cloudUser ->
+            val profileUpdates = UserProfileChangeRequest.Builder()
+                .setDisplayName(username.value)
+                .setPhotoUri(localUserPhoto.value)
+                .build()
 
-        FirebaseAuth.getInstance().currentUser?.updateProfile(userProfileChangeRequest)
-            ?.addOnSuccessListener {
-                if (emailId.value != null) {
-                    FirebaseAuth.getInstance().currentUser?.updateEmail(emailId.value ?: "")
-                        ?.addOnSuccessListener {
-                            // Email update successful
-                            // You can perform further actions if needed
-                        }
-                        ?.addOnFailureListener { e ->
-                            // Handle email update failure
-                            Log.e(TAG, "Error updating email: ${e.message}")
-                        }
-                }
+            CoroutineScope(Dispatchers.IO).launch {
+                cloudUser.updateProfile(profileUpdates)
+                    .addOnSuccessListener {
+                        saveLocalUser()
+                    }.addOnFailureListener { e ->
+                        Log.e(TAG, "Error updating profile: ${e.message}")
+                    }
             }
-            ?.addOnFailureListener { e ->
-                // Handle profile update failure
-                Log.e(TAG, "Error updating profile: ${e.message}")
-            }
-        saveUser()
+        }
     }
-
 }

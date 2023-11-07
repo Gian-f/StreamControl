@@ -3,7 +3,7 @@ package com.br.streamcontrol.domain.rules.enums
 enum class EnumAuthErrors(val message: String) {
     ERROR_INVALID_CUSTOM_TOKEN("Token personalizado inválido."),
     ERROR_CUSTOM_TOKEN_MISMATCH("Token personalizado não corresponde à ID do aplicativo."),
-    ERROR_INVALID_CREDENTIAL("Credencial fornecida inválida."),
+    ERROR_INVALID_CREDENTIAL("E-mail ou senha inválidos."),
     ERROR_INVALID_EMAIL("E-mail inválido."),
     ERROR_WRONG_PASSWORD("Senha incorreta."),
     ERROR_USER_MISMATCH("Credencial do usuário não corresponde."),
