@@ -1,19 +1,25 @@
 package com.br.streamcontrol.ui.screens
 
+import android.net.Uri
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.twotone.Add
 import androidx.compose.material3.ExtendedFloatingActionButton
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.LargeFloatingActionButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -22,6 +28,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -90,7 +97,22 @@ fun HomeScreen(homeViewModel: HomeViewModel = viewModel()) {
                 ExtendedFloatingActionButton(
                     onClick = { /*TODO*/ },
                     content = {
-                        Icon(imageVector = Icons.Filled.Add, contentDescription = "")
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Icon(imageVector = Icons.TwoTone.Add, contentDescription = "")
+                            Spacer(modifier = Modifier.width(6.dp))
+                            Text(text = "Adicionar")
+                        }
+                    }
+                )
+            }
+            if (selectedItemState.intValue == 1) {
+                ExtendedFloatingActionButton(
+                    modifier = Modifier.height(70.dp),
+                    onClick = { /*TODO*/ },
+                    content = {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Icon(imageVector = Icons.TwoTone.Add, contentDescription = "")
+                        }
                     }
                 )
             }
@@ -130,7 +152,7 @@ private fun HomeContent(
             shape = CircleShape,
             modifier = Modifier.padding(start = 8.dp)
         ) {
-            if (imageUri != null) {
+            if (imageUri != Uri.EMPTY) {
                 AsyncImage(
                     modifier = Modifier.size(50.dp),
                     contentScale = ContentScale.FillBounds,
@@ -159,7 +181,7 @@ private fun HomeContent(
                 modifier = Modifier.padding(horizontal = 16.dp)
             )
             Text(
-                text = "${homeViewModel.emailId.value}",
+                text = homeViewModel.emailId.collectAsState().value,
                 fontSize = TextUnit(20F, TextUnitType.Sp),
                 fontWeight = FontWeight.SemiBold,
                 modifier = Modifier.padding(horizontal = 16.dp)

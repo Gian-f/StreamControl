@@ -1,7 +1,6 @@
 package com.br.streamcontrol.ui.screens.topBar
 
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.NotificationsNone
 import androidx.compose.material.icons.outlined.Notifications
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -26,10 +25,10 @@ fun TopAppBarForHome() {
                     Router.navigateTo(Screen.NotificationsScreen)
                 },
             ) {
-                Icon(
-                    imageVector = Icons.Outlined.Notifications,
-                    contentDescription = "Notifications"
-                )
+                    Icon(
+                        imageVector = Icons.Outlined.Notifications,
+                        contentDescription = "Notifications"
+                    )
             }
         }
     )

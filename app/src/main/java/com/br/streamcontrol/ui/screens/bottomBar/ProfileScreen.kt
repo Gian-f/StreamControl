@@ -118,7 +118,7 @@ fun ProfileContent(
                         color = MaterialTheme.colorScheme.surfaceVariant,
                         shape = CircleShape,
                     ) {
-                        if (imageUri != null) {
+                        if (imageUri != Uri.EMPTY) {
                             isModalSheetVisible = false
                             AsyncImage(
                                 model = imageUri,
@@ -190,7 +190,7 @@ fun ProfileContent(
                         .fillMaxWidth()
                         .padding(horizontal = 16.dp),
                     label = { Text("E-mail") },
-                    value = text?: "",
+                    value = text ?: "",
                     onValueChange = { text = it },
                     leadingIcon = {
                         Icon(imageVector = Icons.Outlined.Email, contentDescription = "E-mail")
@@ -304,8 +304,10 @@ fun ProfileContent(
             },
             context = LocalContext.current,
             onImageSelected = { uri ->
-                imageUri = uri
-                homeViewModel.localUserPhoto.value = uri
+                if (uri != null) {
+                    imageUri = uri
+                    homeViewModel.localUserPhoto.value = uri
+                }
             }
         )
     }

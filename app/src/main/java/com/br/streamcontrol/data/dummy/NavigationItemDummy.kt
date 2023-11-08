@@ -50,7 +50,6 @@ object NavigationItemDummy {
             description = "Perfil",
             itemId = "2",
             route = Screen.ProfileScreen
-
         ),
     )
 }

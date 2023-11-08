@@ -2,6 +2,7 @@ package com.br.streamcontrol.domain.repository
 
 import com.br.streamcontrol.data.local.dao.UserDao
 import com.br.streamcontrol.data.model.User
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class UserRepositoryImpl @Inject constructor(
@@ -11,7 +12,7 @@ class UserRepositoryImpl @Inject constructor(
         return dao.insertUser(user)
     }
 
-    override suspend fun getUser(): List<User> {
+    override suspend fun getUser(): Flow<List<User>> {
         return dao.getAllUser()
     }
 

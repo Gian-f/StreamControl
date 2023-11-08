@@ -16,6 +16,8 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -29,29 +31,26 @@ class HomeViewModel @Inject constructor(
 
     val isUserLoggedIn: MutableLiveData<Boolean> = MutableLiveData()
 
-    val emailId: MutableLiveData<String> = MutableLiveData()
+    val emailId: MutableStateFlow<String> = MutableStateFlow("")
 
-    val username: MutableLiveData<String> = MutableLiveData()
+    val username: MutableStateFlow<String> = MutableStateFlow("")
 
-    val localUserPhoto: MutableLiveData<Uri> = MutableLiveData()
+    val localUserPhoto: MutableStateFlow<Uri> = MutableStateFlow(Uri.EMPTY)
 
-    val fireUserPhoto = MutableLiveData<Uri>(FirebaseAuth.getInstance().currentUser?.photoUrl)
+    val fireUserPhoto =
+        MutableStateFlow<Uri>(FirebaseAuth.getInstance().currentUser?.photoUrl ?: Uri.EMPTY)
 
 
     private fun saveLocalUser() {
         viewModelScope.launch(Dispatchers.IO + CoroutineExceptionHandler { _, throwable ->
             Log.e("ERRO Location ", "$throwable")
         }) {
-            val user = localUserPhoto.value?.let { photo ->
-                User(
-                    email = emailId.value ?: "",
-                    name = username.value ?: "",
-                    photo = photo.toString(),
-                )
-            }
-            if (user != null) {
-                repository.insertUser(user)
-            }
+            val user = User(
+                email = emailId.value,
+                name = username.value,
+                photo = localUserPhoto.value.toString(),
+            )
+            repository.insertUser(user)
         }
     }
 
@@ -59,9 +58,9 @@ class HomeViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO + CoroutineExceptionHandler { _, throwable ->
             Log.e(TAG, "$throwable")
         }) {
-            val user = repository.getUser()
+            val user = repository.getUser().first()
             withContext(Dispatchers.Main) {
-                localUserPhoto.value = user.lastOrNull()?.photo?.toUri()
+                localUserPhoto.value = user.last().photo.toUri()
                 Log.d("teste photo", "${localUserPhoto.value}")
                 Log.d("teste photo", "${fireUserPhoto.value}")
             }
@@ -73,7 +72,7 @@ class HomeViewModel @Inject constructor(
             Log.e(TAG, "$throwable")
         }) {
             repository.deleteAllUser()
-            localUserPhoto.postValue(null)
+            localUserPhoto.value = Uri.EMPTY
         }
     }
 
@@ -95,6 +94,7 @@ class HomeViewModel @Inject constructor(
     fun checkForActiveSession() {
         if (FirebaseAuth.getInstance().currentUser != null) {
             Log.d(TAG, "Valid session")
+            getAllUsers()
             isUserLoggedIn.value = true
         } else {
             Log.d(TAG, "User is not logged in")
