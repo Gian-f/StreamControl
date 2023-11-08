@@ -1,4 +1,4 @@
-package com.br.streamcontrol.ui.screens.bottomBar
+package com.br.streamcontrol.ui.screens.navigation
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -21,6 +21,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.br.streamcontrol.data.dummy.CardsDummy.cards
 import com.br.streamcontrol.domain.viewmodel.HomeViewModel
+import com.br.streamcontrol.util.hideCreditCardNumber
 
 @Composable
 fun CardsContent(
@@ -50,7 +51,7 @@ fun CardsContent(
                         text = cards[index].flag
                     )
                     Text(
-                        text = cards[index].cardNumber,
+                        text = hideCreditCardNumber(cards[index].cardNumber),
                         style = MaterialTheme.typography.titleLarge,
                         modifier = Modifier.padding(start = 12.dp)
                     )

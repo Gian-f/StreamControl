@@ -2,7 +2,6 @@ package com.br.streamcontrol.domain.repository
 
 import android.util.Log
 import com.br.streamcontrol.data.remote.dto.response.LocationResponse
-import com.br.streamcontrol.data.remote.infra.ApiServiceFactory
 import com.br.streamcontrol.data.remote.service.LocationService
 import com.br.streamcontrol.data.remote.state.StateInfo
 import javax.inject.Inject
@@ -13,8 +12,7 @@ class LocationRepositoryImpl @Inject constructor(
 
     override suspend fun getLocation(query: String): StateInfo<List<LocationResponse>> {
         return try {
-            val call = service.getUserLocation(query)
-            val response = call.execute()
+            val response = service.getUserLocation(query).execute()
 
             if (response.isSuccessful) {
                 val body = response.body()

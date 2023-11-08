@@ -17,9 +17,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.twotone.Add
 import androidx.compose.material3.ExtendedFloatingActionButton
-import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.LargeFloatingActionButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -36,6 +34,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -51,13 +50,13 @@ import com.br.streamcontrol.domain.routes.SystemBackButtonHandler
 import com.br.streamcontrol.domain.viewmodel.HomeViewModel
 import com.br.streamcontrol.domain.viewmodel.LocationViewModel
 import com.br.streamcontrol.ui.permissions.RequestPermission
-import com.br.streamcontrol.ui.screens.bottomBar.CardsContent
-import com.br.streamcontrol.ui.screens.bottomBar.ChartContent
-import com.br.streamcontrol.ui.screens.bottomBar.ProfileContent
-import com.br.streamcontrol.ui.screens.topBar.TopAppBarForCards
-import com.br.streamcontrol.ui.screens.topBar.TopAppBarForChart
-import com.br.streamcontrol.ui.screens.topBar.TopAppBarForHome
-import com.br.streamcontrol.ui.screens.topBar.TopAppBarForProfile
+import com.br.streamcontrol.ui.screens.header.TopAppBarForCards
+import com.br.streamcontrol.ui.screens.header.TopAppBarForChart
+import com.br.streamcontrol.ui.screens.header.TopAppBarForHome
+import com.br.streamcontrol.ui.screens.header.TopAppBarForProfile
+import com.br.streamcontrol.ui.screens.navigation.CardsContent
+import com.br.streamcontrol.ui.screens.navigation.ChartContent
+import com.br.streamcontrol.ui.screens.navigation.ProfileContent
 import com.br.streamcontrol.ui.widgets.ConfirmDialog
 
 @Composable
@@ -138,9 +137,7 @@ private fun HomeContent(
     contentPadding: PaddingValues,
     homeViewModel: HomeViewModel,
 ) {
-    val imageUri by remember {
-        mutableStateOf(homeViewModel.localUserPhoto.value)
-    }
+    val imageUri by remember { mutableStateOf(homeViewModel.localUserPhoto.value) }
     Row(
         horizontalArrangement = Arrangement.Start,
         modifier = Modifier

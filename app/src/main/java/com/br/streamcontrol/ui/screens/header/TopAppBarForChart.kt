@@ -1,4 +1,4 @@
-package com.br.streamcontrol.ui.screens.topBar
+package com.br.streamcontrol.ui.screens.header
 
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api

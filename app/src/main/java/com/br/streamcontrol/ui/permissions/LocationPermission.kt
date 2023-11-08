@@ -11,7 +11,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import com.br.streamcontrol.domain.viewmodel.LocationViewModel
-import com.br.streamcontrol.ui.screens.dialogs.ShowErrorSheet
+import com.br.streamcontrol.ui.dialogs.ShowErrorSheet
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

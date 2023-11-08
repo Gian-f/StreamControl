@@ -1,4 +1,4 @@
-package com.br.streamcontrol.ui.screens.topBar
+package com.br.streamcontrol.ui.screens.header
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Notifications

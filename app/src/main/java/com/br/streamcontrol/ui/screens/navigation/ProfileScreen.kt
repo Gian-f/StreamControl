@@ -1,4 +1,4 @@
-package com.br.streamcontrol.ui.screens.bottomBar
+package com.br.streamcontrol.ui.screens.navigation
 
 import android.Manifest
 import android.content.Context

@@ -1,4 +1,4 @@
-package com.br.streamcontrol.ui.screens.dialogs
+package com.br.streamcontrol.ui.dialogs
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton

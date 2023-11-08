@@ -22,7 +22,7 @@ import com.br.streamcontrol.data.auth.login.AuthViewModel
 import com.br.streamcontrol.data.auth.login.LoginUIEvent
 import com.br.streamcontrol.domain.routes.Router
 import com.br.streamcontrol.domain.routes.Screen
-import com.br.streamcontrol.ui.screens.dialogs.LoadingBottomSheet
+import com.br.streamcontrol.ui.dialogs.LoadingBottomSheet
 import com.br.streamcontrol.ui.widgets.ButtonComponent
 import com.br.streamcontrol.ui.widgets.ClickableLoginTextComponent
 import com.br.streamcontrol.ui.widgets.DividerTextComponent
