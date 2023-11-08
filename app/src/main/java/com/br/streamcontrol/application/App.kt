@@ -11,6 +11,7 @@ import com.br.streamcontrol.domain.viewmodel.HomeViewModel
 import com.br.streamcontrol.domain.routes.Router
 import com.br.streamcontrol.domain.routes.Screen
 import com.br.streamcontrol.ui.screens.HomeScreen
+import com.br.streamcontrol.ui.screens.NotificationsScreen
 import com.br.streamcontrol.ui.screens.auth.LoginScreen
 import com.br.streamcontrol.ui.screens.auth.SignUpScreen
 
@@ -40,6 +41,9 @@ fun App(homeViewModel: HomeViewModel = viewModel()) {
 
                 is Screen.HomeScreen -> {
                     HomeScreen()
+                }
+                is Screen.NotificationsScreen -> {
+                    NotificationsScreen()
                 }
 
                 else -> {}
