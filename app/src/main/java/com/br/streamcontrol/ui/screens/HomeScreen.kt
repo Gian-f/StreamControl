@@ -1,8 +1,8 @@
 package com.br.streamcontrol.ui.screens
 
-import android.graphics.Color
 import android.net.Uri
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -18,8 +18,11 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material.icons.outlined.KeyboardArrowDown
 import androidx.compose.material.icons.outlined.KeyboardArrowUp
 import androidx.compose.material.icons.twotone.Add
@@ -49,6 +52,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -77,14 +81,8 @@ import com.br.streamcontrol.ui.widgets.ConfirmDialog
 import com.patrykandpatrick.vico.compose.axis.horizontal.rememberBottomAxis
 import com.patrykandpatrick.vico.compose.axis.vertical.rememberStartAxis
 import com.patrykandpatrick.vico.compose.chart.Chart
-import com.patrykandpatrick.vico.compose.chart.column.columnChart
 import com.patrykandpatrick.vico.compose.chart.line.lineChart
 import com.patrykandpatrick.vico.compose.style.ProvideChartStyle
-import com.patrykandpatrick.vico.compose.style.currentChartStyle
-import com.patrykandpatrick.vico.core.chart.column.ColumnChart
-import com.patrykandpatrick.vico.core.chart.decoration.Decoration
-import com.patrykandpatrick.vico.core.component.shape.LineComponent
-import com.patrykandpatrick.vico.core.component.shape.Shapes
 import com.patrykandpatrick.vico.core.entry.ChartEntryModel
 import com.patrykandpatrick.vico.core.entry.entryModelOf
 
@@ -171,9 +169,7 @@ private fun HomeContent(
         Row(
             horizontalArrangement = Arrangement.Start,
             verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(contentPadding)
+            modifier = Modifier.fillMaxWidth().padding(contentPadding)
         ) {
             Surface(
                 color = MaterialTheme.colorScheme.surfaceVariant,
@@ -224,9 +220,101 @@ private fun HomeContent(
                 Spacer(modifier = Modifier.height(20.dp))
                 EntertainmentCard()
             }
-        }
-        LazyRow {
+            item {
+                Spacer(modifier = Modifier.height(20.dp))
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 12.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text(text = "Serviços adicionados", fontWeight = FontWeight.SemiBold)
+                    Text(text = "Ver mais")
+                }
+                Spacer(modifier = Modifier.height(16.dp))
+                LazyRow(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp)
+                ) {
+                    item {
+                        ElevatedCard(
+                            modifier = Modifier
+                                .width(120.dp)
+                                .height(150.dp)
+                        ) {
+                            Image(
+                                painter = painterResource(id = R.drawable.netflix),
+                                modifier = Modifier
+                                    .height(120.dp)
+                                    .fillMaxWidth()
+                                    .padding(22.dp)
+                                    .clip(CircleShape),
+                                contentDescription = "netflix"
+                            )
+                            Text(
+                                text = "Netflix", textAlign = TextAlign.Center,
+                                modifier = Modifier.fillMaxWidth()
+                            )
+                        }
+                        Spacer(modifier = Modifier.width(16.dp))
+                    }
+                    item {
+                        ElevatedCard(
+                            modifier = Modifier
+                                .width(120.dp)
+                                .height(150.dp)
+                        ) {
+                            Image(
+                                painter = painterResource(id = R.drawable.primevideo),
+                                alignment = Alignment.Center,
+                                modifier = Modifier
+                                    .height(120.dp)
+                                    .fillMaxWidth()
+                                    .padding(22.dp)
+                                    .clip(CircleShape),
+                                contentScale = ContentScale.FillBounds,
+                                contentDescription = "prime"
+                            )
+                            Text(
+                                text = "Prime",
+                                textAlign = TextAlign.Center,
+                                modifier = Modifier.fillMaxWidth()
+                            )
+                        }
+                        Spacer(modifier = Modifier.width(16.dp))
+                    }
+                    item {
+                        ElevatedCard(
+                            modifier = Modifier
+                                .width(120.dp)
+                                .height(150.dp)
+                                .clip(RoundedCornerShape(2.dp))
+                                .clickable {
 
+                                }
+                        ) {
+                            Image(
+                               imageVector = Icons.Outlined.Add,
+                                alignment = Alignment.Center,
+                                modifier = Modifier
+                                    .height(120.dp)
+                                    .fillMaxWidth()
+                                    .padding(22.dp)
+                                    .clip(CircleShape),
+                                contentScale = ContentScale.FillBounds,
+                                contentDescription = "Adicionar"
+                            )
+                            Text(
+                                text = "Adicionar",
+                                textAlign = TextAlign.Center,
+                                modifier = Modifier.fillMaxWidth()
+                            )
+                        }
+                    }
+                }
+            }
         }
     }
 }
