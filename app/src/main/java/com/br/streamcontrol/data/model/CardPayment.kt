@@ -10,5 +10,6 @@ data class CardPayment(
     val cardNumber: String,
     val holderName: String,
     val dueDate: String,
+    val cvv: String,
     val flag: String
 )

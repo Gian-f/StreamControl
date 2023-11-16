@@ -10,6 +10,7 @@ sealed class Screen {
     data object ProfileScreen : Screen()
     data object SettingsScreen : Screen()
     data object NotificationsScreen : Screen()
+    data object CardDetailsScreen : Screen()
 }
 
 

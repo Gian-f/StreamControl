@@ -14,6 +14,7 @@ import com.br.streamcontrol.ui.screens.HomeScreen
 import com.br.streamcontrol.ui.screens.NotificationsScreen
 import com.br.streamcontrol.ui.screens.auth.LoginScreen
 import com.br.streamcontrol.ui.screens.auth.SignUpScreen
+import com.br.streamcontrol.ui.screens.navigation.CardDetails
 
 @Composable
 fun App(homeViewModel: HomeViewModel = viewModel()) {
@@ -44,6 +45,9 @@ fun App(homeViewModel: HomeViewModel = viewModel()) {
                 }
                 is Screen.NotificationsScreen -> {
                     NotificationsScreen()
+                }
+                is Screen.CardDetailsScreen -> {
+                    CardDetails()
                 }
 
                 else -> {}

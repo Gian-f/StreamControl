@@ -8,37 +8,8 @@ object CardsDummy {
             cardNumber = "5555 5555 5555 5555",
             dueDate = "01/12",
             flag = "Visa",
-            holderName = "Gian Felipe da Silva"
-        ),
-        CardPayment(
-            cardNumber = "5555 5555 5555 5555",
-            dueDate = "01/12",
-            flag = "Visa",
-            holderName = "Gian Felipe da Silva"
-        ),
-        CardPayment(
-            cardNumber = "5555 5555 5555 5555",
-            dueDate = "01/12",
-            flag = "Visa",
-            holderName = "Gian Felipe da Silva"
-        ),
-        CardPayment(
-            cardNumber = "5555 5555 5555 5555",
-            dueDate = "01/12",
-            flag = "Visa",
-            holderName = "Gian Felipe da Silva"
-        ),
-        CardPayment(
-            cardNumber = "5555 5555 5555 5555",
-            dueDate = "01/12",
-            flag = "Visa",
-            holderName = "Gian Felipe da Silva"
-        ),
-        CardPayment(
-            cardNumber = "5555 5555 5555 5555",
-            dueDate = "01/12",
-            flag = "Visa",
-            holderName = "Gian Felipe da Silva"
+            holderName = "Gian Felipe da Silva",
+            cvv = ""
         ),
     )
 }

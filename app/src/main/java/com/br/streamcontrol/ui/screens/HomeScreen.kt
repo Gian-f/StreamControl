@@ -1,5 +1,6 @@
 package com.br.streamcontrol.ui.screens
 
+import android.graphics.Color
 import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -8,18 +9,19 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.outlined.KeyboardArrowDown
 import androidx.compose.material.icons.outlined.KeyboardArrowUp
-import androidx.compose.material.icons.outlined.MoreVert
 import androidx.compose.material.icons.twotone.Add
 import androidx.compose.material3.Badge
 import androidx.compose.material3.BadgedBox
@@ -51,7 +53,6 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
@@ -73,6 +74,19 @@ import com.br.streamcontrol.ui.screens.navigation.CardsContent
 import com.br.streamcontrol.ui.screens.navigation.ChartContent
 import com.br.streamcontrol.ui.screens.navigation.ProfileContent
 import com.br.streamcontrol.ui.widgets.ConfirmDialog
+import com.patrykandpatrick.vico.compose.axis.horizontal.rememberBottomAxis
+import com.patrykandpatrick.vico.compose.axis.vertical.rememberStartAxis
+import com.patrykandpatrick.vico.compose.chart.Chart
+import com.patrykandpatrick.vico.compose.chart.column.columnChart
+import com.patrykandpatrick.vico.compose.chart.line.lineChart
+import com.patrykandpatrick.vico.compose.style.ProvideChartStyle
+import com.patrykandpatrick.vico.compose.style.currentChartStyle
+import com.patrykandpatrick.vico.core.chart.column.ColumnChart
+import com.patrykandpatrick.vico.core.chart.decoration.Decoration
+import com.patrykandpatrick.vico.core.component.shape.LineComponent
+import com.patrykandpatrick.vico.core.component.shape.Shapes
+import com.patrykandpatrick.vico.core.entry.ChartEntryModel
+import com.patrykandpatrick.vico.core.entry.entryModelOf
 
 @Composable
 fun HomeScreen(homeViewModel: HomeViewModel = viewModel()) {
@@ -122,7 +136,7 @@ fun HomeScreen(homeViewModel: HomeViewModel = viewModel()) {
             if (selectedItemState.intValue == 1) {
                 ExtendedFloatingActionButton(
                     modifier = Modifier.height(70.dp),
-                    onClick = { /*TODO*/ },
+                    onClick = { Router.navigateTo(Screen.CardDetailsScreen) },
                     content = {
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             Icon(imageVector = Icons.TwoTone.Add, contentDescription = "")
@@ -202,92 +216,105 @@ private fun HomeContent(
                 )
             }
         }
-        LazyColumn {
+        LazyColumn(modifier = Modifier.fillMaxSize()) {
             item {
                 UsageCard()
             }
             item {
                 Spacer(modifier = Modifier.height(20.dp))
                 EntertainmentCard()
-                Spacer(modifier = Modifier.height(20.dp))
             }
+        }
+        LazyRow {
+
         }
     }
 }
 
 @Composable
 private fun UsageCard() {
-    Column {
-        ElevatedCard(
-            elevation = CardDefaults.cardElevation(2.dp),
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(150.dp)
-                .padding(horizontal = 16.dp)
+    var cardHeight by remember { mutableStateOf(150.dp) }
+
+    ElevatedCard(
+        elevation = CardDefaults.cardElevation(2.dp),
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(cardHeight)
+            .padding(horizontal = 16.dp)
+    ) {
+        Row(
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.fillMaxWidth()
         ) {
-            Row(
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Text(
-                    text = "Uso",
-                    fontSize = TextUnit(17F, TextUnitType.Sp),
-                    fontWeight = FontWeight.W600,
-                    modifier = Modifier.padding(horizontal = 16.dp)
-                )
-                IconButton(onClick = { /*TODO*/ }) {
-                    Icon(
-                        imageVector = Icons.Outlined.MoreVert,
-                        contentDescription = "arrowDown"
-                    )
-                }
-            }
-            Row(
-                horizontalArrangement = Arrangement.Start,
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp)
-            ) {
-                Image(
-                    painter = painterResource(id = R.drawable.netflix),
-                    modifier = Modifier.height(30.dp),
-                    contentDescription = "netflix"
-                )
-                Text(
-                    text = "Netflix",
-                    fontSize = TextUnit(16F, TextUnitType.Sp),
-                    fontWeight = FontWeight.SemiBold,
-                    modifier = Modifier.padding(horizontal = 16.dp)
+            Text(
+                text = "Uso",
+                fontSize = TextUnit(17F, TextUnitType.Sp),
+                fontWeight = FontWeight.W600,
+                modifier = Modifier.padding(horizontal = 16.dp)
+            )
+            IconButton(onClick = { cardHeight = if (cardHeight == 150.dp) 250.dp else 150.dp }) {
+                Icon(
+                    imageVector = if (cardHeight == 150.dp) Icons.Outlined.KeyboardArrowDown else Icons.Outlined.KeyboardArrowUp,
+                    contentDescription = "arrowDown"
                 )
             }
-            Spacer(modifier = Modifier.height(4.dp))
-            Row {
+        }
+        Row {
+            Column {
+
                 Row(
                     horizontalArrangement = Arrangement.Start,
                     verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier
+                        .width(150.dp)
+                        .padding(horizontal = 16.dp)
                 ) {
-                    Column {
-                        Text(
-                            text = "12:27 h",
-                            fontSize = TextUnit(20F, TextUnitType.Sp),
-                            fontWeight = FontWeight.Medium,
-                            modifier = Modifier.padding(horizontal = 16.dp)
-                        )
-                        Spacer(modifier = Modifier.height(4.dp))
-                        Text(
-                            text = "Essa semana",
-                            textAlign = TextAlign.End,
-                            fontSize = TextUnit(13F, TextUnitType.Sp),
-                            fontWeight = FontWeight.W500,
-                            modifier = Modifier.padding(horizontal = 16.dp)
-                        )
-                    }
+                    Image(
+                        painter = painterResource(id = R.drawable.netflix),
+                        modifier = Modifier.height(30.dp),
+                        contentDescription = "netflix"
+                    )
+                    Text(
+                        text = "Netflix",
+                        fontSize = TextUnit(16F, TextUnitType.Sp),
+                        fontWeight = FontWeight.SemiBold,
+                        modifier = Modifier.padding(horizontal = 16.dp)
+                    )
                 }
+                Spacer(modifier = Modifier.height(4.dp))
+                Text(
+                    text = "18:27 h",
+                    fontSize = TextUnit(20F, TextUnitType.Sp),
+                    fontWeight = FontWeight.Medium,
+                    modifier = Modifier.padding(horizontal = 16.dp)
+                )
+                Spacer(modifier = Modifier.height(4.dp))
+                Text(
+                    text = "Essa semana",
+                    textAlign = TextAlign.End,
+                    fontSize = TextUnit(13F, TextUnitType.Sp),
+                    fontWeight = FontWeight.W500,
+                    modifier = Modifier.padding(horizontal = 16.dp)
+                )
             }
+            val chartEntryModel = entryModelOf(6f, 2f, 10f)
+            Charts(chartEntryModel)
         }
+    }
+}
+
+
+@Composable
+private fun Charts(chartEntryModel: ChartEntryModel) {
+    ProvideChartStyle(rememberChartStyle(chartColors)) {
+        Chart(
+            chart = lineChart(),
+            model = chartEntryModel,
+            startAxis = rememberStartAxis(),
+            bottomAxis = rememberBottomAxis(valueFormatter = bottomAxisValueFormatter),
+            marker = rememberMarker(),
+        )
     }
 }
 
@@ -319,7 +346,7 @@ private fun EntertainmentCard() {
                 )
                 BadgedBox(badge = {
                     Badge {
-                        Text("3")
+                        Text("2")
                     }
                 }) {}
             }
@@ -424,12 +451,6 @@ private fun EntertainmentCard() {
             }
         }
     }
-}
-
-@Preview
-@Composable
-fun HomeScreenPreview() {
-    HomeScreen()
 }
 
 @Composable
