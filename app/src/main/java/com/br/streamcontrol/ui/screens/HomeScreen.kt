@@ -2,7 +2,6 @@ package com.br.streamcontrol.ui.screens
 
 import android.net.Uri
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -48,7 +47,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -61,9 +59,9 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.br.streamcontrol.R
 import com.br.streamcontrol.data.dummy.NavigationItemDummy.navItems
+import com.br.streamcontrol.domain.routes.OnBackPress
 import com.br.streamcontrol.domain.routes.Router
 import com.br.streamcontrol.domain.routes.Screen
-import com.br.streamcontrol.domain.routes.SystemBackButtonHandler
 import com.br.streamcontrol.domain.viewmodel.HomeViewModel
 import com.br.streamcontrol.domain.viewmodel.LocationViewModel
 import com.br.streamcontrol.ui.permissions.RequestPermission
@@ -99,7 +97,7 @@ fun HomeScreen(homeViewModel: HomeViewModel = viewModel()) {
         content = { contentPadding ->
             when (selectedItemState.intValue) {
                 0 -> HomeContent(contentPadding, homeViewModel)
-                1 -> CardsContent(contentPadding, homeViewModel)
+                1 -> CardsContent(contentPadding)
                 2 -> ChartContent(contentPadding, homeViewModel)
                 3 -> ProfileContent(contentPadding, homeViewModel)
                 else -> HomeContent(contentPadding, homeViewModel)
@@ -135,7 +133,7 @@ fun HomeScreen(homeViewModel: HomeViewModel = viewModel()) {
         }
     )
 
-    SystemBackButtonHandler {
+    OnBackPress {
         openDialog.value = true
     }
 
@@ -368,7 +366,9 @@ private fun EntertainmentCard() {
                     ) {
                         Image(
                             painter = painterResource(id = R.drawable.netflix),
-                            modifier = Modifier.height(30.dp).width(25.dp),
+                            modifier = Modifier
+                                .height(30.dp)
+                                .width(25.dp),
                             contentDescription = "netflix"
                         )
                         Text(
@@ -401,7 +401,9 @@ private fun EntertainmentCard() {
                     ) {
                         Image(
                             painter = painterResource(id = R.drawable.primevideo),
-                            modifier = Modifier.height(30.dp).width(25.dp),
+                            modifier = Modifier
+                                .height(30.dp)
+                                .width(25.dp),
                             contentDescription = "amazon"
                         )
                         Text(

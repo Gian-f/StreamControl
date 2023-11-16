@@ -32,7 +32,7 @@ import androidx.compose.ui.util.fastDistinctBy
 import com.br.streamcontrol.data.dummy.NotificationsData
 import com.br.streamcontrol.domain.routes.Router
 import com.br.streamcontrol.domain.routes.Screen
-import com.br.streamcontrol.domain.routes.SystemBackButtonHandler
+import com.br.streamcontrol.domain.routes.OnBackPress
 import com.br.streamcontrol.ui.widgets.ConfirmDialog
 import java.util.Date
 import java.util.concurrent.TimeUnit
@@ -122,7 +122,7 @@ fun NotificationsScreen() {
         }
     )
 
-    SystemBackButtonHandler {
+    OnBackPress {
         Router.navigateTo(Screen.HomeScreen)
     }
 }

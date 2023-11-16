@@ -19,15 +19,18 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.br.streamcontrol.data.dummy.CardsDummy.cards
+import com.br.streamcontrol.domain.viewmodel.CardViewModel
 import com.br.streamcontrol.domain.viewmodel.HomeViewModel
 import com.br.streamcontrol.util.hideCreditCardNumber
 
 @Composable
 fun CardsContent(
     contentPadding: PaddingValues,
-    homeViewModel: HomeViewModel,
 ) {
+    val cardViewModel: CardViewModel = viewModel()
+
     LazyColumn(
         contentPadding = contentPadding,
         verticalArrangement = Arrangement.Center,
@@ -42,7 +45,7 @@ fun CardsContent(
                 elevation = CardDefaults.cardElevation(8.dp)
             ) {
 
-                Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = Modifier.height(20.dp))
 
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(

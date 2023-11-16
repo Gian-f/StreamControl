@@ -4,13 +4,21 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import com.br.streamcontrol.data.local.dao.CardDao
 import com.br.streamcontrol.data.local.dao.UserDao
+import com.br.streamcontrol.data.model.CardPayment
 import com.br.streamcontrol.data.model.User
 
-@Database(entities = [User::class], version = 1, exportSchema = false)
+@Database(
+    entities = [
+        User::class,
+        CardPayment::class
+    ], version = 1, exportSchema = false
+)
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun userDao(): UserDao
+    abstract fun cardDao(): CardDao
 
     companion object {
         @Volatile

@@ -129,7 +129,7 @@ fun BackgroundImage(
             painter = backgroundImage,
             contentDescription = null,
             contentScale = ContentScale.FillWidth,
-            modifier = Modifier.fillMaxWidth().height(170.dp)
+            modifier = Modifier.fillMaxWidth().height(180.dp)
         )
         content()
     }

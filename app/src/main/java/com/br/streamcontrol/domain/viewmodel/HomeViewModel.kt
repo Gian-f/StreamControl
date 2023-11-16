@@ -41,13 +41,13 @@ class HomeViewModel @Inject constructor(
         MutableStateFlow<Uri>(FirebaseAuth.getInstance().currentUser?.photoUrl ?: Uri.EMPTY)
 
 
-    private fun saveLocalUser() {
+    private fun saveLocalUser(email: String, name: String) {
         viewModelScope.launch(Dispatchers.IO + CoroutineExceptionHandler { _, throwable ->
             Log.e("ERRO Location ", "$throwable")
         }) {
             val user = User(
-                email = emailId.value,
-                name = username.value,
+                email = email,
+                name = name,
                 photo = localUserPhoto.value.toString(),
             )
             repository.insertUser(user)
@@ -113,17 +113,17 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    fun updateUser() {
+    fun updateUser(email: String, name: String, photoUri: Uri) {
         FirebaseAuth.getInstance().currentUser?.let { cloudUser ->
             val profileUpdates = UserProfileChangeRequest.Builder()
-                .setDisplayName(username.value)
-                .setPhotoUri(localUserPhoto.value)
+                .setDisplayName(name)
+                .setPhotoUri(photoUri)
                 .build()
 
             CoroutineScope(Dispatchers.IO).launch {
                 cloudUser.updateProfile(profileUpdates)
                     .addOnSuccessListener {
-                        saveLocalUser()
+                        saveLocalUser(email, name)
                     }.addOnFailureListener { e ->
                         Log.e(TAG, "Error updating profile: ${e.message}")
                     }

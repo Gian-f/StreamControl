@@ -20,7 +20,7 @@ import com.br.streamcontrol.data.auth.signup.SignupUIEvent
 import com.br.streamcontrol.data.auth.signup.SignUpViewModel
 import com.br.streamcontrol.domain.routes.Router
 import com.br.streamcontrol.domain.routes.Screen
-import com.br.streamcontrol.domain.routes.SystemBackButtonHandler
+import com.br.streamcontrol.domain.routes.OnBackPress
 import com.br.streamcontrol.ui.widgets.ButtonComponent
 import com.br.streamcontrol.ui.widgets.CheckboxComponent
 import com.br.streamcontrol.ui.widgets.ClickableLoginTextComponent
@@ -120,7 +120,7 @@ fun SignUpScreen(signUpViewModel: SignUpViewModel = viewModel()) {
             CircularProgressIndicator()
         }
     }
-    SystemBackButtonHandler {
+    OnBackPress {
         Router.navigateTo(Screen.LoginScreen)
     }
 }

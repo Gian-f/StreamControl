@@ -5,6 +5,7 @@ import android.content.Context
 import androidx.lifecycle.ViewModelProvider
 import androidx.room.Room
 import com.br.streamcontrol.data.local.AppDatabase
+import com.br.streamcontrol.data.local.dao.CardDao
 import com.br.streamcontrol.data.local.dao.UserDao
 import com.br.streamcontrol.data.remote.infra.ApiServiceFactory
 import com.br.streamcontrol.data.remote.service.LocationService
@@ -36,6 +37,11 @@ object ViewModelModule {
     @Provides
     fun provideUserDao(database: AppDatabase): UserDao {
         return database.userDao()
+    }
+
+    @Provides
+    fun provideCardDao(database: AppDatabase): CardDao {
+        return database.cardDao()
     }
 
     @Provides

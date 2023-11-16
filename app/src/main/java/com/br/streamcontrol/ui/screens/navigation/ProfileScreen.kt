@@ -93,6 +93,8 @@ fun ProfileContent(
     var isModalSheetVisible by remember { mutableStateOf(false) }
     var imageUri by remember { mutableStateOf(homeViewModel.localUserPhoto.value) }
     var isSaving by remember { mutableStateOf(false) }
+    var email by remember { mutableStateOf(homeViewModel.emailId.value) }
+    var name by remember { mutableStateOf(homeViewModel.username.value) }
     val locationViewModel: LocationViewModel = viewModel()
     val handler = Handler(Looper.getMainLooper())
 
@@ -144,14 +146,13 @@ fun ProfileContent(
                 }
             }
             item {
-                var text by remember { mutableStateOf(homeViewModel.username.value) }
                 OutlinedTextField(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 16.dp),
                     label = { Text("Nome Completo") },
-                    value = text ?: "",
-                    onValueChange = { text = it },
+                    value = name ?: "",
+                    onValueChange = { name = it },
                     singleLine = true,
                     leadingIcon = {
                         Icon(
@@ -160,13 +161,13 @@ fun ProfileContent(
                         )
                     },
                     trailingIcon = {
-                        text?.let {
+                        name?.let {
                             AnimatedVisibility(
                                 visible = it.isNotBlank(),
                                 enter = fadeIn(),
                                 exit = fadeOut()
                             ) {
-                                IconButton(onClick = { text = "" }) {
+                                IconButton(onClick = { name = "" }) {
                                     Icon(Icons.Outlined.Cancel, "Clear")
                                 }
                             }
@@ -184,29 +185,15 @@ fun ProfileContent(
 
             }
             item {
-                var text by remember { mutableStateOf(homeViewModel.emailId.value) }
                 OutlinedTextField(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 16.dp),
                     label = { Text("E-mail") },
-                    value = text ?: "",
-                    onValueChange = { text = it },
+                    value = email ?: "",
+                    onValueChange = { email = it },
                     leadingIcon = {
                         Icon(imageVector = Icons.Outlined.Email, contentDescription = "E-mail")
-                    },
-                    trailingIcon = {
-                        text?.let {
-                            AnimatedVisibility(
-                                visible = it.isNotBlank(),
-                                enter = fadeIn(),
-                                exit = fadeOut()
-                            ) {
-                                IconButton(onClick = { text = "" }) {
-                                    Icon(Icons.Outlined.Cancel, "Clear")
-                                }
-                            }
-                        }
                     },
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Email,
@@ -216,6 +203,7 @@ fun ProfileContent(
                         focusManager.clearFocus()
                     },
                     singleLine = true,
+                    readOnly = true
                 )
             }
             item {
@@ -251,10 +239,10 @@ fun ProfileContent(
                             Toast.makeText(
                                 context,
                                 "Operação realizada com sucesso!",
-                                Toast.LENGTH_SHORT
+                                Toast.LENGTH_LONG
                             ).show()
                         }, 2000)
-                        homeViewModel.updateUser()
+                        homeViewModel.updateUser(email, name, imageUri)
                     },
                     modifier = Modifier
                         .fillMaxWidth()
