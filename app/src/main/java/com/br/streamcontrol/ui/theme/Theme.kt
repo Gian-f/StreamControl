@@ -1,4 +1,4 @@
-package com.br.streamcontrol.ui.theme
+    package com.br.streamcontrol.ui.theme
 
 import android.app.Activity
 import android.os.Build

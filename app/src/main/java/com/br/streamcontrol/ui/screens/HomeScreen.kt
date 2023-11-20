@@ -1,7 +1,9 @@
 package com.br.streamcontrol.ui.screens
 
 import android.net.Uri
+import android.widget.Toast
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -22,7 +24,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material.icons.outlined.KeyboardArrowDown
 import androidx.compose.material.icons.outlined.KeyboardArrowUp
 import androidx.compose.material.icons.twotone.Add
@@ -48,12 +49,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -88,7 +90,6 @@ import com.patrykandpatrick.vico.core.entry.entryModelOf
 
 @Composable
 fun HomeScreen(homeViewModel: HomeViewModel = viewModel()) {
-    val coroutineScope = rememberCoroutineScope()
     val openDialog = remember { mutableStateOf(false) }
     val selectedItemState = remember { mutableIntStateOf(0) }
     val locationViewModel: LocationViewModel = viewModel()
@@ -119,18 +120,6 @@ fun HomeScreen(homeViewModel: HomeViewModel = viewModel()) {
             BottomNavigation(selectedItemState, homeViewModel)
         },
         floatingActionButton = {
-            if (selectedItemState.intValue == 0) {
-                ExtendedFloatingActionButton(
-                    onClick = { /*TODO*/ },
-                    content = {
-                        Row(verticalAlignment = Alignment.CenterVertically) {
-                            Icon(imageVector = Icons.TwoTone.Add, contentDescription = "")
-                            Spacer(modifier = Modifier.width(6.dp))
-                            Text(text = "Adicionar")
-                        }
-                    }
-                )
-            }
             if (selectedItemState.intValue == 1) {
                 ExtendedFloatingActionButton(
                     modifier = Modifier.height(70.dp),
@@ -165,11 +154,17 @@ private fun HomeContent(
     homeViewModel: HomeViewModel,
 ) {
     val imageUri by remember { mutableStateOf(homeViewModel.localUserPhoto.value) }
-    Column {
+    val context = LocalContext.current
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(contentPadding)
+    ) {
         Row(
             horizontalArrangement = Arrangement.Start,
             verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.fillMaxWidth().padding(contentPadding)
+            modifier = Modifier
+                .fillMaxWidth()
         ) {
             Surface(
                 color = MaterialTheme.colorScheme.surfaceVariant,
@@ -212,6 +207,7 @@ private fun HomeContent(
                 )
             }
         }
+        Spacer(modifier = Modifier.height(30.dp))
         LazyColumn(modifier = Modifier.fillMaxSize()) {
             item {
                 UsageCard()
@@ -244,15 +240,22 @@ private fun HomeContent(
                                 .width(120.dp)
                                 .height(150.dp)
                         ) {
-                            Image(
-                                painter = painterResource(id = R.drawable.netflix),
+                            Box(
                                 modifier = Modifier
                                     .height(120.dp)
                                     .fillMaxWidth()
                                     .padding(22.dp)
-                                    .clip(CircleShape),
-                                contentDescription = "netflix"
-                            )
+                                    .background(Color.Black, CircleShape)
+                            ) {
+                                Image(
+                                    painter = painterResource(id = R.drawable.netflix),
+                                    modifier = Modifier
+                                        .height(120.dp)
+                                        .padding(6.dp)
+                                        .clip(CircleShape),
+                                    contentDescription = "netflix"
+                                )
+                            }
                             Text(
                                 text = "Netflix", textAlign = TextAlign.Center,
                                 modifier = Modifier.fillMaxWidth()
@@ -290,13 +293,15 @@ private fun HomeContent(
                             modifier = Modifier
                                 .width(120.dp)
                                 .height(150.dp)
-                                .clip(RoundedCornerShape(2.dp))
+                                .clip(RoundedCornerShape(12.dp))
                                 .clickable {
-
-                                }
+                                    Toast
+                                        .makeText(context, "TODO", Toast.LENGTH_SHORT)
+                                        .show()
+                                },
                         ) {
                             Image(
-                               imageVector = Icons.Outlined.Add,
+                                imageVector = Icons.Filled.Add,
                                 alignment = Alignment.Center,
                                 modifier = Modifier
                                     .height(120.dp)
@@ -304,7 +309,7 @@ private fun HomeContent(
                                     .padding(22.dp)
                                     .clip(CircleShape),
                                 contentScale = ContentScale.FillBounds,
-                                contentDescription = "Adicionar"
+                                contentDescription = "prime"
                             )
                             Text(
                                 text = "Adicionar",
@@ -349,44 +354,45 @@ private fun UsageCard() {
             }
         }
         Row {
-            Column {
-
-                Row(
-                    horizontalArrangement = Arrangement.Start,
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier
-                        .width(150.dp)
-                        .padding(horizontal = 16.dp)
-                ) {
-                    Image(
-                        painter = painterResource(id = R.drawable.netflix),
-                        modifier = Modifier.height(30.dp),
-                        contentDescription = "netflix"
-                    )
+            LazyColumn {
+                item {
+                    Row(
+                        horizontalArrangement = Arrangement.Start,
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier
+                            .width(150.dp)
+                            .padding(horizontal = 16.dp)
+                    ) {
+                        Image(
+                            painter = painterResource(id = R.drawable.netflix),
+                            modifier = Modifier.height(30.dp),
+                            contentDescription = "netflix"
+                        )
+                        Text(
+                            text = "Netflix",
+                            fontSize = TextUnit(16F, TextUnitType.Sp),
+                            fontWeight = FontWeight.SemiBold,
+                            modifier = Modifier.padding(horizontal = 16.dp)
+                        )
+                    }
+                    Spacer(modifier = Modifier.height(4.dp))
                     Text(
-                        text = "Netflix",
-                        fontSize = TextUnit(16F, TextUnitType.Sp),
-                        fontWeight = FontWeight.SemiBold,
+                        text = "18:27 h",
+                        fontSize = TextUnit(20F, TextUnitType.Sp),
+                        fontWeight = FontWeight.Medium,
+                        modifier = Modifier.padding(horizontal = 16.dp)
+                    )
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Text(
+                        text = "Essa semana",
+                        textAlign = TextAlign.End,
+                        fontSize = TextUnit(13F, TextUnitType.Sp),
+                        fontWeight = FontWeight.W500,
                         modifier = Modifier.padding(horizontal = 16.dp)
                     )
                 }
-                Spacer(modifier = Modifier.height(4.dp))
-                Text(
-                    text = "18:27 h",
-                    fontSize = TextUnit(20F, TextUnitType.Sp),
-                    fontWeight = FontWeight.Medium,
-                    modifier = Modifier.padding(horizontal = 16.dp)
-                )
-                Spacer(modifier = Modifier.height(4.dp))
-                Text(
-                    text = "Essa semana",
-                    textAlign = TextAlign.End,
-                    fontSize = TextUnit(13F, TextUnitType.Sp),
-                    fontWeight = FontWeight.W500,
-                    modifier = Modifier.padding(horizontal = 16.dp)
-                )
             }
-            val chartEntryModel = entryModelOf(6f, 2f, 10f)
+            val chartEntryModel = entryModelOf(6f, 2.27f, 10f)
             Charts(chartEntryModel)
         }
     }
