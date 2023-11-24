@@ -5,6 +5,6 @@ import com.br.streamcontrol.data.model.User
 import kotlinx.coroutines.flow.Flow
 
 interface CardRepository {
-    suspend fun insertCard(card: CardPayment)
+    suspend fun insertCard(card: CardPayment): Result<Unit>
     suspend fun getCards(): Flow<List<CardPayment>>
 }
